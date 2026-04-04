@@ -5,8 +5,9 @@
 
 KavachConditions::KavachConditions(DemCore& dem,
                                     EvtLogger& logger,
-                                    KavachEth& eth)
-    : m_dem(dem), m_logger(logger), m_eth(eth) {
+                                    KavachEth& eth,
+                                    ModbusTcp& modbus)
+    : m_dem(dem), m_logger(logger), m_eth(eth), m_modbus(modbus) {
     printf("[KavachConditions] Ready\n");
 }
 

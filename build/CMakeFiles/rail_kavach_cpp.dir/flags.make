@@ -4,7 +4,7 @@
 # compile CXX with /usr/bin/c++
 CXX_DEFINES = 
 
-CXX_INCLUDES = -I/home/chethan/railway-dem-cpp/bsw/dem/include -I/home/chethan/railway-dem-cpp/bsw/nvm/include -I/home/chethan/railway-dem-cpp/bsw/kavach/include -I/home/chethan/railway-dem-cpp/bsw/can/include
+CXX_INCLUDES = -I/home/chethan/railway-dem-cpp/bsw/dem/include -I/home/chethan/railway-dem-cpp/bsw/dcm/include -I/home/chethan/railway-dem-cpp/bsw/nvm/include -I/home/chethan/railway-dem-cpp/bsw/kavach/include -I/home/chethan/railway-dem-cpp/bsw/can/include
 
 CXX_FLAGS =  -Wall -Wextra -Wpedantic -std=gnu++17
 

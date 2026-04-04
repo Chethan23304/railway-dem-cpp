@@ -111,47 +111,47 @@ CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/EvtLogger.cpp.s: cmake_force
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/EvtLogger.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/chethan/railway-dem-cpp/bsw/dem/src/EvtLogger.cpp -o CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/EvtLogger.cpp.s
 
-CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSL.cpp.o: CMakeFiles/rail_kavach_cpp.dir/flags.make
-CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSL.cpp.o: /home/chethan/railway-dem-cpp/bsw/dem/src/DCM_DSL.cpp
-CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSL.cpp.o: CMakeFiles/rail_kavach_cpp.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/chethan/railway-dem-cpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSL.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSL.cpp.o -MF CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSL.cpp.o.d -o CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSL.cpp.o -c /home/chethan/railway-dem-cpp/bsw/dem/src/DCM_DSL.cpp
+CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSL.cpp.o: CMakeFiles/rail_kavach_cpp.dir/flags.make
+CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSL.cpp.o: /home/chethan/railway-dem-cpp/bsw/dcm/src/DCM_DSL.cpp
+CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSL.cpp.o: CMakeFiles/rail_kavach_cpp.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/chethan/railway-dem-cpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_4) "Building CXX object CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSL.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSL.cpp.o -MF CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSL.cpp.o.d -o CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSL.cpp.o -c /home/chethan/railway-dem-cpp/bsw/dcm/src/DCM_DSL.cpp
 
-CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSL.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSL.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/chethan/railway-dem-cpp/bsw/dem/src/DCM_DSL.cpp > CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSL.cpp.i
+CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSL.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSL.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/chethan/railway-dem-cpp/bsw/dcm/src/DCM_DSL.cpp > CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSL.cpp.i
 
-CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSL.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSL.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/chethan/railway-dem-cpp/bsw/dem/src/DCM_DSL.cpp -o CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSL.cpp.s
+CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSL.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSL.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/chethan/railway-dem-cpp/bsw/dcm/src/DCM_DSL.cpp -o CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSL.cpp.s
 
-CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSP.cpp.o: CMakeFiles/rail_kavach_cpp.dir/flags.make
-CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSP.cpp.o: /home/chethan/railway-dem-cpp/bsw/dem/src/DCM_DSP.cpp
-CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSP.cpp.o: CMakeFiles/rail_kavach_cpp.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/chethan/railway-dem-cpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSP.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSP.cpp.o -MF CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSP.cpp.o.d -o CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSP.cpp.o -c /home/chethan/railway-dem-cpp/bsw/dem/src/DCM_DSP.cpp
+CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSP.cpp.o: CMakeFiles/rail_kavach_cpp.dir/flags.make
+CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSP.cpp.o: /home/chethan/railway-dem-cpp/bsw/dcm/src/DCM_DSP.cpp
+CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSP.cpp.o: CMakeFiles/rail_kavach_cpp.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/chethan/railway-dem-cpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_5) "Building CXX object CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSP.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSP.cpp.o -MF CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSP.cpp.o.d -o CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSP.cpp.o -c /home/chethan/railway-dem-cpp/bsw/dcm/src/DCM_DSP.cpp
 
-CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSP.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSP.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/chethan/railway-dem-cpp/bsw/dem/src/DCM_DSP.cpp > CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSP.cpp.i
+CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSP.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSP.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/chethan/railway-dem-cpp/bsw/dcm/src/DCM_DSP.cpp > CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSP.cpp.i
 
-CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSP.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSP.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/chethan/railway-dem-cpp/bsw/dem/src/DCM_DSP.cpp -o CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSP.cpp.s
+CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSP.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSP.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/chethan/railway-dem-cpp/bsw/dcm/src/DCM_DSP.cpp -o CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSP.cpp.s
 
-CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSD.cpp.o: CMakeFiles/rail_kavach_cpp.dir/flags.make
-CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSD.cpp.o: /home/chethan/railway-dem-cpp/bsw/dem/src/DCM_DSD.cpp
-CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSD.cpp.o: CMakeFiles/rail_kavach_cpp.dir/compiler_depend.ts
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/chethan/railway-dem-cpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSD.cpp.o"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSD.cpp.o -MF CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSD.cpp.o.d -o CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSD.cpp.o -c /home/chethan/railway-dem-cpp/bsw/dem/src/DCM_DSD.cpp
+CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSD.cpp.o: CMakeFiles/rail_kavach_cpp.dir/flags.make
+CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSD.cpp.o: /home/chethan/railway-dem-cpp/bsw/dcm/src/DCM_DSD.cpp
+CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSD.cpp.o: CMakeFiles/rail_kavach_cpp.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/chethan/railway-dem-cpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_6) "Building CXX object CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSD.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSD.cpp.o -MF CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSD.cpp.o.d -o CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSD.cpp.o -c /home/chethan/railway-dem-cpp/bsw/dcm/src/DCM_DSD.cpp
 
-CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSD.cpp.i: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSD.cpp.i"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/chethan/railway-dem-cpp/bsw/dem/src/DCM_DSD.cpp > CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSD.cpp.i
+CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSD.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSD.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/chethan/railway-dem-cpp/bsw/dcm/src/DCM_DSD.cpp > CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSD.cpp.i
 
-CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSD.cpp.s: cmake_force
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSD.cpp.s"
-	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/chethan/railway-dem-cpp/bsw/dem/src/DCM_DSD.cpp -o CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSD.cpp.s
+CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSD.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSD.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/chethan/railway-dem-cpp/bsw/dcm/src/DCM_DSD.cpp -o CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSD.cpp.s
 
 CMakeFiles/rail_kavach_cpp.dir/bsw/nvm/src/NvmStorage.cpp.o: CMakeFiles/rail_kavach_cpp.dir/flags.make
 CMakeFiles/rail_kavach_cpp.dir/bsw/nvm/src/NvmStorage.cpp.o: /home/chethan/railway-dem-cpp/bsw/nvm/src/NvmStorage.cpp
@@ -195,17 +195,32 @@ CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/KavachConditions.cpp.s: cmake_forc
 	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/KavachConditions.cpp.s"
 	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/chethan/railway-dem-cpp/bsw/kavach/src/KavachConditions.cpp -o CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/KavachConditions.cpp.s
 
+CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/ModbusTcp.cpp.o: CMakeFiles/rail_kavach_cpp.dir/flags.make
+CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/ModbusTcp.cpp.o: /home/chethan/railway-dem-cpp/bsw/kavach/src/ModbusTcp.cpp
+CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/ModbusTcp.cpp.o: CMakeFiles/rail_kavach_cpp.dir/compiler_depend.ts
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --progress-dir=/home/chethan/railway-dem-cpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Building CXX object CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/ModbusTcp.cpp.o"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -MD -MT CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/ModbusTcp.cpp.o -MF CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/ModbusTcp.cpp.o.d -o CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/ModbusTcp.cpp.o -c /home/chethan/railway-dem-cpp/bsw/kavach/src/ModbusTcp.cpp
+
+CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/ModbusTcp.cpp.i: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Preprocessing CXX source to CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/ModbusTcp.cpp.i"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -E /home/chethan/railway-dem-cpp/bsw/kavach/src/ModbusTcp.cpp > CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/ModbusTcp.cpp.i
+
+CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/ModbusTcp.cpp.s: cmake_force
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green "Compiling CXX source to assembly CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/ModbusTcp.cpp.s"
+	/usr/bin/c++ $(CXX_DEFINES) $(CXX_INCLUDES) $(CXX_FLAGS) -S /home/chethan/railway-dem-cpp/bsw/kavach/src/ModbusTcp.cpp -o CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/ModbusTcp.cpp.s
+
 # Object files for target rail_kavach_cpp
 rail_kavach_cpp_OBJECTS = \
 "CMakeFiles/rail_kavach_cpp.dir/app/diag_app/main.cpp.o" \
 "CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DemCore.cpp.o" \
 "CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/EvtLogger.cpp.o" \
-"CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSL.cpp.o" \
-"CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSP.cpp.o" \
-"CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSD.cpp.o" \
+"CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSL.cpp.o" \
+"CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSP.cpp.o" \
+"CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSD.cpp.o" \
 "CMakeFiles/rail_kavach_cpp.dir/bsw/nvm/src/NvmStorage.cpp.o" \
 "CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/KavachEth.cpp.o" \
-"CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/KavachConditions.cpp.o"
+"CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/KavachConditions.cpp.o" \
+"CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/ModbusTcp.cpp.o"
 
 # External object files for target rail_kavach_cpp
 rail_kavach_cpp_EXTERNAL_OBJECTS =
@@ -213,15 +228,17 @@ rail_kavach_cpp_EXTERNAL_OBJECTS =
 rail_kavach_cpp: CMakeFiles/rail_kavach_cpp.dir/app/diag_app/main.cpp.o
 rail_kavach_cpp: CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DemCore.cpp.o
 rail_kavach_cpp: CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/EvtLogger.cpp.o
-rail_kavach_cpp: CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSL.cpp.o
-rail_kavach_cpp: CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSP.cpp.o
-rail_kavach_cpp: CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSD.cpp.o
+rail_kavach_cpp: CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSL.cpp.o
+rail_kavach_cpp: CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSP.cpp.o
+rail_kavach_cpp: CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSD.cpp.o
 rail_kavach_cpp: CMakeFiles/rail_kavach_cpp.dir/bsw/nvm/src/NvmStorage.cpp.o
 rail_kavach_cpp: CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/KavachEth.cpp.o
 rail_kavach_cpp: CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/KavachConditions.cpp.o
+rail_kavach_cpp: CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/ModbusTcp.cpp.o
 rail_kavach_cpp: CMakeFiles/rail_kavach_cpp.dir/build.make
+rail_kavach_cpp: /usr/lib/x86_64-linux-gnu/libmodbus.so
 rail_kavach_cpp: CMakeFiles/rail_kavach_cpp.dir/link.txt
-	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/chethan/railway-dem-cpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_10) "Linking CXX executable rail_kavach_cpp"
+	@$(CMAKE_COMMAND) -E cmake_echo_color "--switch=$(COLOR)" --green --bold --progress-dir=/home/chethan/railway-dem-cpp/build/CMakeFiles --progress-num=$(CMAKE_PROGRESS_11) "Linking CXX executable rail_kavach_cpp"
 	$(CMAKE_COMMAND) -E cmake_link_script CMakeFiles/rail_kavach_cpp.dir/link.txt --verbose=$(VERBOSE)
 
 # Rule to build all files generated by this target.

@@ -153,77 +153,77 @@ app/diag_app/main.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/app/diag_app/main.cpp.s
 .PHONY : app/diag_app/main.cpp.s
 
-bsw/dem/src/DCM_DSD.o: bsw/dem/src/DCM_DSD.cpp.o
-.PHONY : bsw/dem/src/DCM_DSD.o
+bsw/dcm/src/DCM_DSD.o: bsw/dcm/src/DCM_DSD.cpp.o
+.PHONY : bsw/dcm/src/DCM_DSD.o
 
 # target to build an object file
-bsw/dem/src/DCM_DSD.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSD.cpp.o
-.PHONY : bsw/dem/src/DCM_DSD.cpp.o
+bsw/dcm/src/DCM_DSD.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSD.cpp.o
+.PHONY : bsw/dcm/src/DCM_DSD.cpp.o
 
-bsw/dem/src/DCM_DSD.i: bsw/dem/src/DCM_DSD.cpp.i
-.PHONY : bsw/dem/src/DCM_DSD.i
+bsw/dcm/src/DCM_DSD.i: bsw/dcm/src/DCM_DSD.cpp.i
+.PHONY : bsw/dcm/src/DCM_DSD.i
 
 # target to preprocess a source file
-bsw/dem/src/DCM_DSD.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSD.cpp.i
-.PHONY : bsw/dem/src/DCM_DSD.cpp.i
+bsw/dcm/src/DCM_DSD.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSD.cpp.i
+.PHONY : bsw/dcm/src/DCM_DSD.cpp.i
 
-bsw/dem/src/DCM_DSD.s: bsw/dem/src/DCM_DSD.cpp.s
-.PHONY : bsw/dem/src/DCM_DSD.s
+bsw/dcm/src/DCM_DSD.s: bsw/dcm/src/DCM_DSD.cpp.s
+.PHONY : bsw/dcm/src/DCM_DSD.s
 
 # target to generate assembly for a file
-bsw/dem/src/DCM_DSD.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSD.cpp.s
-.PHONY : bsw/dem/src/DCM_DSD.cpp.s
+bsw/dcm/src/DCM_DSD.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSD.cpp.s
+.PHONY : bsw/dcm/src/DCM_DSD.cpp.s
 
-bsw/dem/src/DCM_DSL.o: bsw/dem/src/DCM_DSL.cpp.o
-.PHONY : bsw/dem/src/DCM_DSL.o
+bsw/dcm/src/DCM_DSL.o: bsw/dcm/src/DCM_DSL.cpp.o
+.PHONY : bsw/dcm/src/DCM_DSL.o
 
 # target to build an object file
-bsw/dem/src/DCM_DSL.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSL.cpp.o
-.PHONY : bsw/dem/src/DCM_DSL.cpp.o
+bsw/dcm/src/DCM_DSL.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSL.cpp.o
+.PHONY : bsw/dcm/src/DCM_DSL.cpp.o
 
-bsw/dem/src/DCM_DSL.i: bsw/dem/src/DCM_DSL.cpp.i
-.PHONY : bsw/dem/src/DCM_DSL.i
+bsw/dcm/src/DCM_DSL.i: bsw/dcm/src/DCM_DSL.cpp.i
+.PHONY : bsw/dcm/src/DCM_DSL.i
 
 # target to preprocess a source file
-bsw/dem/src/DCM_DSL.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSL.cpp.i
-.PHONY : bsw/dem/src/DCM_DSL.cpp.i
+bsw/dcm/src/DCM_DSL.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSL.cpp.i
+.PHONY : bsw/dcm/src/DCM_DSL.cpp.i
 
-bsw/dem/src/DCM_DSL.s: bsw/dem/src/DCM_DSL.cpp.s
-.PHONY : bsw/dem/src/DCM_DSL.s
+bsw/dcm/src/DCM_DSL.s: bsw/dcm/src/DCM_DSL.cpp.s
+.PHONY : bsw/dcm/src/DCM_DSL.s
 
 # target to generate assembly for a file
-bsw/dem/src/DCM_DSL.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSL.cpp.s
-.PHONY : bsw/dem/src/DCM_DSL.cpp.s
+bsw/dcm/src/DCM_DSL.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSL.cpp.s
+.PHONY : bsw/dcm/src/DCM_DSL.cpp.s
 
-bsw/dem/src/DCM_DSP.o: bsw/dem/src/DCM_DSP.cpp.o
-.PHONY : bsw/dem/src/DCM_DSP.o
+bsw/dcm/src/DCM_DSP.o: bsw/dcm/src/DCM_DSP.cpp.o
+.PHONY : bsw/dcm/src/DCM_DSP.o
 
 # target to build an object file
-bsw/dem/src/DCM_DSP.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSP.cpp.o
-.PHONY : bsw/dem/src/DCM_DSP.cpp.o
+bsw/dcm/src/DCM_DSP.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSP.cpp.o
+.PHONY : bsw/dcm/src/DCM_DSP.cpp.o
 
-bsw/dem/src/DCM_DSP.i: bsw/dem/src/DCM_DSP.cpp.i
-.PHONY : bsw/dem/src/DCM_DSP.i
+bsw/dcm/src/DCM_DSP.i: bsw/dcm/src/DCM_DSP.cpp.i
+.PHONY : bsw/dcm/src/DCM_DSP.i
 
 # target to preprocess a source file
-bsw/dem/src/DCM_DSP.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSP.cpp.i
-.PHONY : bsw/dem/src/DCM_DSP.cpp.i
+bsw/dcm/src/DCM_DSP.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSP.cpp.i
+.PHONY : bsw/dcm/src/DCM_DSP.cpp.i
 
-bsw/dem/src/DCM_DSP.s: bsw/dem/src/DCM_DSP.cpp.s
-.PHONY : bsw/dem/src/DCM_DSP.s
+bsw/dcm/src/DCM_DSP.s: bsw/dcm/src/DCM_DSP.cpp.s
+.PHONY : bsw/dcm/src/DCM_DSP.s
 
 # target to generate assembly for a file
-bsw/dem/src/DCM_DSP.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSP.cpp.s
-.PHONY : bsw/dem/src/DCM_DSP.cpp.s
+bsw/dcm/src/DCM_DSP.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSP.cpp.s
+.PHONY : bsw/dcm/src/DCM_DSP.cpp.s
 
 bsw/dem/src/DemCore.o: bsw/dem/src/DemCore.cpp.o
 .PHONY : bsw/dem/src/DemCore.o
@@ -321,6 +321,30 @@ bsw/kavach/src/KavachEth.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/KavachEth.cpp.s
 .PHONY : bsw/kavach/src/KavachEth.cpp.s
 
+bsw/kavach/src/ModbusTcp.o: bsw/kavach/src/ModbusTcp.cpp.o
+.PHONY : bsw/kavach/src/ModbusTcp.o
+
+# target to build an object file
+bsw/kavach/src/ModbusTcp.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/ModbusTcp.cpp.o
+.PHONY : bsw/kavach/src/ModbusTcp.cpp.o
+
+bsw/kavach/src/ModbusTcp.i: bsw/kavach/src/ModbusTcp.cpp.i
+.PHONY : bsw/kavach/src/ModbusTcp.i
+
+# target to preprocess a source file
+bsw/kavach/src/ModbusTcp.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/ModbusTcp.cpp.i
+.PHONY : bsw/kavach/src/ModbusTcp.cpp.i
+
+bsw/kavach/src/ModbusTcp.s: bsw/kavach/src/ModbusTcp.cpp.s
+.PHONY : bsw/kavach/src/ModbusTcp.s
+
+# target to generate assembly for a file
+bsw/kavach/src/ModbusTcp.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/ModbusTcp.cpp.s
+.PHONY : bsw/kavach/src/ModbusTcp.cpp.s
+
 bsw/nvm/src/NvmStorage.o: bsw/nvm/src/NvmStorage.cpp.o
 .PHONY : bsw/nvm/src/NvmStorage.o
 
@@ -357,15 +381,15 @@ help:
 	@echo "... app/diag_app/main.o"
 	@echo "... app/diag_app/main.i"
 	@echo "... app/diag_app/main.s"
-	@echo "... bsw/dem/src/DCM_DSD.o"
-	@echo "... bsw/dem/src/DCM_DSD.i"
-	@echo "... bsw/dem/src/DCM_DSD.s"
-	@echo "... bsw/dem/src/DCM_DSL.o"
-	@echo "... bsw/dem/src/DCM_DSL.i"
-	@echo "... bsw/dem/src/DCM_DSL.s"
-	@echo "... bsw/dem/src/DCM_DSP.o"
-	@echo "... bsw/dem/src/DCM_DSP.i"
-	@echo "... bsw/dem/src/DCM_DSP.s"
+	@echo "... bsw/dcm/src/DCM_DSD.o"
+	@echo "... bsw/dcm/src/DCM_DSD.i"
+	@echo "... bsw/dcm/src/DCM_DSD.s"
+	@echo "... bsw/dcm/src/DCM_DSL.o"
+	@echo "... bsw/dcm/src/DCM_DSL.i"
+	@echo "... bsw/dcm/src/DCM_DSL.s"
+	@echo "... bsw/dcm/src/DCM_DSP.o"
+	@echo "... bsw/dcm/src/DCM_DSP.i"
+	@echo "... bsw/dcm/src/DCM_DSP.s"
 	@echo "... bsw/dem/src/DemCore.o"
 	@echo "... bsw/dem/src/DemCore.i"
 	@echo "... bsw/dem/src/DemCore.s"
@@ -378,6 +402,9 @@ help:
 	@echo "... bsw/kavach/src/KavachEth.o"
 	@echo "... bsw/kavach/src/KavachEth.i"
 	@echo "... bsw/kavach/src/KavachEth.s"
+	@echo "... bsw/kavach/src/ModbusTcp.o"
+	@echo "... bsw/kavach/src/ModbusTcp.i"
+	@echo "... bsw/kavach/src/ModbusTcp.s"
 	@echo "... bsw/nvm/src/NvmStorage.o"
 	@echo "... bsw/nvm/src/NvmStorage.i"
 	@echo "... bsw/nvm/src/NvmStorage.s"

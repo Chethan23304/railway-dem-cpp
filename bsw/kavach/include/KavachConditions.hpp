@@ -3,6 +3,7 @@
 #include "DemCore.hpp"
 #include "EvtLogger.hpp"
 #include "KavachEth.hpp"
+#include "ModbusTcp.hpp"
 
 // KavachConditions: checks all Kavach safety conditions and reports to DEM
 class KavachConditions {
@@ -16,7 +17,8 @@ public:
     struct RollData    { bool    rollback = false; uint8_t speed = 0; };
     struct SosData     { bool    pressed = false; };
 
-    KavachConditions(DemCore& dem, EvtLogger& logger, KavachEth& eth);
+    KavachConditions(DemCore& dem, EvtLogger& logger,
+                  KavachEth& eth, ModbusTcp& modbus);
 
     // Set simulated sensor values
     void setSpeed(uint8_t actual, uint8_t permitted);
@@ -34,7 +36,8 @@ public:
 private:
     DemCore&   m_dem;
     EvtLogger& m_logger;
-    KavachEth& m_eth;
+    KavachEth&  m_eth;
+    ModbusTcp&  m_modbus;
 
     SpeedData  m_speed{};
     BrakeData  m_brake{};

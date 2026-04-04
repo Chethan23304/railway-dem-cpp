@@ -7,6 +7,7 @@
 #include "EvtLogger.hpp"
 #include "KavachEth.hpp"
 #include "KavachConditions.hpp"
+#include "ModbusTcp.hpp"
 #include "DCM_DSL.hpp"
 #include "DCM_DSP.hpp"
 #include "DCM_DSD.hpp"
@@ -60,43 +61,35 @@ static void runScenario(KavachConditions& cond) {
     cond.setMode(0x07); cond.checkAll(); sleep(1);
 }
 
-static void runDcmDemo(DCM_DSD& dsd, EvtLogger& logger) {
+static void runDcmDemo(DCM_DSD& dsd) {
     uint8_t req[8], resp[256];
 
     printf("\n\n========================================\n");
     printf("  DCM UDS Services\n");
     printf("========================================\n");
 
-    // Switch to Extended session
     req[0]=0x10; req[1]=0x03;
     dsd.dispatch(req, 2, resp, sizeof(resp));
 
-    // Read VIN
     req[0]=0x22; req[1]=0xF1; req[2]=0x90;
     dsd.dispatch(req, 3, resp, sizeof(resp));
 
-    // Read Active Session
     req[0]=0x22; req[1]=0xF1; req[2]=0x86;
     dsd.dispatch(req, 3, resp, sizeof(resp));
 
-    // Read Event Count
     req[0]=0x22; req[1]=0xF1; req[2]=0x00;
     dsd.dispatch(req, 3, resp, sizeof(resp));
 
-    // Count failed DTCs
     req[0]=0x19; req[1]=0x01; req[2]=DEM_UDS_STATUS_TF;
     dsd.dispatch(req, 3, resp, sizeof(resp));
 
-    // List all failed DTCs
     req[0]=0x19; req[1]=0x02; req[2]=DEM_UDS_STATUS_TF;
     dsd.dispatch(req, 3, resp, sizeof(resp));
 
-    // Detail on OverSpeed DTC
     req[0]=0x19; req[1]=0x06;
     req[2]=0x00; req[3]=0xA1; req[4]=0x01;
     dsd.dispatch(req, 5, resp, sizeof(resp));
 
-    // Security Access
     req[0]=0x27; req[1]=0x01;
     dsd.dispatch(req, 2, resp, sizeof(resp));
     uint32_t key = 0xDEADBEEFU ^ 0xCAFEBABEU;
@@ -107,35 +100,71 @@ static void runDcmDemo(DCM_DSD& dsd, EvtLogger& logger) {
     req[5]=static_cast<uint8_t>( key     &0xFF);
     dsd.dispatch(req, 6, resp, sizeof(resp));
 
-    // Clear all DTCs
     req[0]=0x14; req[1]=0xFF; req[2]=0xFF; req[3]=0xFF;
     dsd.dispatch(req, 4, resp, sizeof(resp));
 
-    // Verify cleared
     req[0]=0x19; req[1]=0x01; req[2]=DEM_UDS_STATUS_TF;
     dsd.dispatch(req, 3, resp, sizeof(resp));
 
-    // Return to Default session
     req[0]=0x10; req[1]=0x01;
     dsd.dispatch(req, 2, resp, sizeof(resp));
 
-    // ClearDTC in Default session - should be DENIED
     req[0]=0x14; req[1]=0xFF; req[2]=0xFF; req[3]=0xFF;
     dsd.dispatch(req, 4, resp, sizeof(resp));
+}
 
-    // ---- ReadByIdentifier queries -> written to events_readbyid.csv ----
+static void runRbiPrompt(EvtLogger& logger) {
     printf("\n========================================\n");
-    printf("  ReadByIdentifier Queries\n");
-    printf("  (written to events_readbyid.csv)\n");
+    printf("  ReadByIdentifier - Enter Event ID\n");
+    printf("----------------------------------------\n");
+    printf("  0x00A1 = Over_Speeding\n");
+    printf("  0x00A2 = SPAD\n");
+    printf("  0x00A3 = SOS_Received\n");
+    printf("  0x00A4 = Roll_Back\n");
+    printf("  0x00A5 = Radio_Loss\n");
+    printf("  0x00A6 = Brake_Command\n");
+    printf("  0x00B1 = RFID_Tag_Read\n");
+    printf("  0x0007 = Trip\n");
+    printf("  0x0000 = Query ALL\n");
+    printf("  q      = Quit\n");
     printf("========================================\n");
-    logger.readByIdentifier(KAVACH_EVT_OVERSPEED);
-    logger.readByIdentifier(KAVACH_EVT_SPAD);
-    logger.readByIdentifier(KAVACH_EVT_SOS);
-    logger.readByIdentifier(KAVACH_EVT_RADIO_LOSS);
-    logger.readByIdentifier(KAVACH_EVT_ROLLBACK);
-    logger.readByIdentifier(KAVACH_EVT_RFID);
-    logger.readByIdentifier(KAVACH_EVT_BRAKE_CMD);
-    logger.readByIdentifier(KAVACH_EVT_MODE_TR);
+
+    char buf[16];
+    while (true) {
+        printf("\nEnter Event ID: ");
+        fflush(stdout);
+        if (!fgets(buf, sizeof(buf), stdin)) break;
+
+        // trim newline
+        for (int i = 0; buf[i]; i++)
+            if (buf[i] == '\n') { buf[i] = '\0'; break; }
+
+        if (buf[0] == 'q' || buf[0] == 'Q') {
+            printf("Exiting ReadByIdentifier.\n");
+            break;
+        }
+
+        unsigned int parsed = 0;
+        if (sscanf(buf, "%x", &parsed) != 1) {
+            printf("  Invalid. Enter hex like 0x00A1 or q to quit.\n");
+            continue;
+        }
+
+        Dem_EventIdType evtId = static_cast<Dem_EventIdType>(parsed);
+
+        if (evtId == 0x0000U) {
+            Dem_EventIdType all[] = {
+                KAVACH_EVT_OVERSPEED, KAVACH_EVT_SPAD,
+                KAVACH_EVT_SOS,       KAVACH_EVT_RADIO_LOSS,
+                KAVACH_EVT_ROLLBACK,  KAVACH_EVT_RFID,
+                KAVACH_EVT_BRAKE_CMD, KAVACH_EVT_MODE_TR
+            };
+            for (auto id : all)
+                logger.readByIdentifier(id);
+        } else {
+            logger.readByIdentifier(evtId);
+        }
+    }
 }
 
 int main() {
@@ -148,18 +177,25 @@ int main() {
     NvmStorage       nvm{"dem_nvram.bin"};
     EvtLogger        logger{"logs"};
     KavachEth        eth{"192.168.0.110", 1502, 5601};
-    KavachConditions cond{dem, logger, eth};
-    DCM_DSL          dsl{};
-    DCM_DSP          dsp{dem, logger, dsl};
-    DCM_DSD          dsd{dsl, dsp};
+    ModbusTcp        modbus{"192.168.0.110", 1502};
+    modbus.connect();
+    KavachConditions cond{dem, logger, eth, modbus};
+
+    DCM_DSL  dsl{};
+    DCM_DSP  dsp{dem, logger, dsl};
+    DCM_DSD  dsd{dsl, dsp};
 
     nvm.restore(dem);
     printf("\n[MAIN] Running Kavach scenario...\n");
     sleep(1);
 
     runScenario(cond);
+    modbus.pushSnapshot(dem, 0x07, 120, 80, 0x03);
     printDtcReport(dem);
-    runDcmDemo(dsd, logger);
+    runDcmDemo(dsd);
+
+    // Interactive ReadByIdentifier prompt
+    runRbiPrompt(logger);
 
     nvm.store(dem);
     printf("\n[MAIN] Done.\n");
