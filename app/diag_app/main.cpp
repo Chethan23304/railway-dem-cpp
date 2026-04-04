@@ -194,41 +194,7 @@ int main() {
     printDtcReport(dem);
     runDcmDemo(dsd);
 
-    // -------------------------------------------------------
-    // REAL-TIME LOOP: push live data to DMI every 500ms
-    // This is what sends continuous data to the Modbus DMI
-    // -------------------------------------------------------
-    printf("\n[MAIN] Entering real-time loop -> sending to DMI...\n");
-    printf("[MAIN] Press Ctrl+C to stop and enter RBI query mode\n\n");
-
-    uint8_t  speed_actual  = 120;
-    uint8_t  speed_permit  = 80;
-    uint8_t  kavach_mode   = 0x07;
-    uint8_t  dcm_session   = 0x03;
-    uint32_t cycle         = 0;
-
-    while (true) {
-        cycle++;
-
-        // Simulate speed changing every 10 cycles (5 seconds)
-        if (cycle % 10 == 0) {
-            speed_actual = static_cast<uint8_t>(60 + (cycle % 80));
-            printf("[MAIN] Cycle %u: speed=%d mode=0x%02X\n",
-                   cycle, speed_actual, kavach_mode);
-        }
-
-        // Push ALL current DEM state to Modbus DMI
-        modbus.pushSnapshot(dem, kavach_mode,
-                            speed_actual, speed_permit, dcm_session);
-
-        // Re-check conditions each cycle
-        cond.checkAll();
-
-        // Sleep 500ms between cycles (adjust to 100ms for faster updates)
-        usleep(500000);
-    }
-
-    // Interactive ReadByIdentifier prompt (reached only after Ctrl+C)
+    // Interactive ReadByIdentifier prompt
     runRbiPrompt(logger);
 
     nvm.store(dem);
