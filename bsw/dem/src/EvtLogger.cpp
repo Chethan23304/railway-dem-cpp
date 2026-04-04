@@ -8,7 +8,11 @@
 EvtLogger::EvtLogger(const std::string& logDir) : m_logDir(logDir) {
     mkdir(logDir.c_str(), 0755);
 
-    // ---- Current run files: OVERWRITE each run ----
+    // Create history subfolder
+    std::string histDir = logDir + "/history";
+    mkdir(histDir.c_str(), 0755);
+
+    // ---- Current run: OVERWRITE ----
     m_failedCsv = fopen((logDir + "/events_failed.csv").c_str(), "w");
     m_failedTxt = fopen((logDir + "/events_failed.txt").c_str(), "w");
 
@@ -33,9 +37,7 @@ EvtLogger::EvtLogger(const std::string& logDir) : m_logDir(logDir) {
             "------------------------","--------","----","--------");
     }
 
-    // ---- RBI history file: APPEND across all runs ----
-    m_runNumber = readRunNumber();
-
+    // ---- Master RBI history: APPEND ----
     m_rbiCsv = fopen((logDir + "/rbi_history.csv").c_str(), "a");
     if (m_rbiCsv) {
         fseek(m_rbiCsv, 0, SEEK_END);
@@ -46,9 +48,15 @@ EvtLogger::EvtLogger(const std::string& logDir) : m_logDir(logDir) {
                 "DTC,UDS_Status,Occurrences,Severity,Source\n");
     }
 
+    m_runNumber = readRunNumber();
+
     printf("[EvtLogger] Run #%d started\n", m_runNumber);
-    printf("[EvtLogger] Current run -> events_failed.csv\n");
-    printf("[EvtLogger] Full history -> rbi_history.csv\n");
+    printf("[EvtLogger] Current run  -> %s/events_failed.csv\n",
+           logDir.c_str());
+    printf("[EvtLogger] RBI master   -> %s/rbi_history.csv\n",
+           logDir.c_str());
+    printf("[EvtLogger] Per-event    -> %s/history/\n",
+           logDir.c_str());
 }
 
 EvtLogger::~EvtLogger() {
@@ -66,7 +74,6 @@ EvtLogger::~EvtLogger() {
 }
 
 int EvtLogger::readRunNumber() {
-    // Count existing runs in rbi_history to get next run number
     FILE* f = fopen((m_logDir + "/rbi_history.csv").c_str(), "r");
     if (!f) return 1;
     char line[512];
@@ -102,6 +109,28 @@ bool EvtLogger::alreadyLogged(Dem_EventIdType eventId) const {
     return m_logged[eventId];
 }
 
+// Build per-event filename: logs/history/0x00A1_Over_Speeding.csv
+std::string EvtLogger::perEventPath(Dem_EventIdType id) const {
+    char buf[64];
+    snprintf(buf, sizeof(buf), "/history/0x%04X_%s.csv", id,
+             getEventName(id));
+    return m_logDir + buf;
+}
+
+void EvtLogger::ensurePerEventHeader(Dem_EventIdType id) {
+    // Only write header if file is brand new
+    std::string path = perEventPath(id);
+    FILE* f = fopen(path.c_str(), "a");
+    if (!f) return;
+    fseek(f, 0, SEEK_END);
+    long sz = ftell(f);
+    if (sz == 0)
+        fprintf(f,
+            "Run,QueryNo,Timestamp,EventId,EventName,"
+            "DTC,UDS_Status,Occurrences,Severity,Source\n");
+    fclose(f);
+}
+
 void EvtLogger::logFailed(Dem_EventIdType eventId, Dem_DTCType dtc,
                            uint8_t udsStatus, uint8_t occurrences,
                            const std::string& source) {
@@ -111,7 +140,6 @@ void EvtLogger::logFailed(Dem_EventIdType eventId, Dem_DTCType dtc,
 
     std::string ts = timestamp();
 
-    // Save in-memory for RBI lookup later
     FailedEntry& fe = m_entries[eventId];
     fe.dtc         = dtc;
     fe.udsStatus   = udsStatus;
@@ -122,7 +150,6 @@ void EvtLogger::logFailed(Dem_EventIdType eventId, Dem_DTCType dtc,
     writeFailedCsv(ts, eventId, dtc, udsStatus, occurrences, source);
     writeFailedTxt(ts, eventId, dtc, udsStatus, occurrences, source);
 
-    // Console: current run only
     printf("[EvtLogger] #%d FAILED EventId=0x%04X %-22s DTC=0x%06X\n",
            m_failedCount, eventId, getEventName(eventId), dtc);
 }
@@ -160,29 +187,45 @@ void EvtLogger::appendRbiHistory(Dem_EventIdType id,
                                    const FailedEntry& e) {
     if (!m_rbiCsv) return;
     m_rbiCount++;
+    std::string ts = timestamp();
+
+    // 1. Write to master rbi_history.csv
     fprintf(m_rbiCsv,
         "%d,%d,%s,0x%04X,%s,0x%06X,0x%02X,%d,%s,%s\n",
-        m_runNumber, m_rbiCount, timestamp().c_str(),
+        m_runNumber, m_rbiCount, ts.c_str(),
         id, getEventName(id),
         e.dtc, e.udsStatus, e.occurrences,
         getSeverity(id).c_str(), e.source);
     fflush(m_rbiCsv);
+
+    // 2. Write to per-event file
+    ensurePerEventHeader(id);
+    FILE* f = fopen(perEventPath(id).c_str(), "a");
+    if (f) {
+        fprintf(f,
+            "%d,%d,%s,0x%04X,%s,0x%06X,0x%02X,%d,%s,%s\n",
+            m_runNumber, m_rbiCount, ts.c_str(),
+            id, getEventName(id),
+            e.dtc, e.udsStatus, e.occurrences,
+            getSeverity(id).c_str(), e.source);
+        fflush(f);
+        fclose(f);
+    }
 }
 
 void EvtLogger::printRbiHistory(Dem_EventIdType id) {
-    // Read rbi_history.csv and print only rows matching this event ID
-    FILE* f = fopen((m_logDir + "/rbi_history.csv").c_str(), "r");
+    // Read from per-event file (already segregated)
+    std::string path = perEventPath(id);
+    FILE* f = fopen(path.c_str(), "r");
     if (!f) {
-        printf("  No history file found.\n");
+        printf("  No history yet for this event.\n");
         return;
     }
 
     char line[512];
     int  found = 0;
-    char searchId[12];
-    snprintf(searchId, sizeof(searchId), "0x%04X", id);
 
-    // Skip header line
+    // Skip header
     fgets(line, sizeof(line), f);
 
     printf("\n  %-4s %-20s %-24s %-10s %-8s %-4s\n",
@@ -192,17 +235,13 @@ void EvtLogger::printRbiHistory(Dem_EventIdType id) {
            "------------------------","----------","--------","----");
 
     while (fgets(line, sizeof(line), f)) {
-        // Parse: Run,QueryNo,Timestamp,EventId,EventName,DTC,UDS,Occ,...
-        int    run = 0, qno = 0, occ = 0;
-        char   ts[32], eid[12], ename[32], dtc[12], uds[8], sev[10], src[32];
+        int    run=0, qno=0, occ=0;
+        char   ts[32], eid[12], ename[32];
+        char   dtc[12], uds[8], sev[10], src[32];
         int n = sscanf(line,
             "%d,%d,%31[^,],%11[^,],%31[^,],%11[^,],%7[^,],%d,%9[^,],%31s",
             &run, &qno, ts, eid, ename, dtc, uds, &occ, sev, src);
         if (n < 8) continue;
-
-        // Match event ID
-        if (strcmp(eid, searchId) != 0) continue;
-
         printf("  %-4d %-20s %-24s %-10s %-8s %-4d\n",
                run, ts, ename, dtc, uds, occ);
         found++;
@@ -210,9 +249,10 @@ void EvtLogger::printRbiHistory(Dem_EventIdType id) {
     fclose(f);
 
     if (found == 0)
-        printf("  No previous history found for EventId %s\n", searchId);
+        printf("  No history yet for this event.\n");
     else
-        printf("\n  Total records found: %d (across all runs)\n", found);
+        printf("\n  Total: %d records | File: logs/history/0x%04X_%s.csv\n",
+               found, id, getEventName(id));
 }
 
 void EvtLogger::readByIdentifier(Dem_EventIdType eventId) {
@@ -222,10 +262,9 @@ void EvtLogger::readByIdentifier(Dem_EventIdType eventId) {
            eventId, getEventName(eventId));
     printf("+-----------------------------------------------------------------+\n");
 
-    // Show current run result
     if (alreadyLogged(eventId)) {
         const FailedEntry& fe = m_entries[eventId];
-        printf("|  CURRENT RUN (#%d)                                             |\n",
+        printf("|  CURRENT RUN (#%-2d)                                            |\n",
                m_runNumber);
         printf("|  DTC Code   : 0x%06X                                        |\n",
                fe.dtc);
@@ -236,16 +275,15 @@ void EvtLogger::readByIdentifier(Dem_EventIdType eventId) {
         printf("|  Logged At  : %-51s|\n", fe.timestamp);
         printf("|  Status     : FAILED                                           |\n");
         printf("+-----------------------------------------------------------------+\n");
-
-        // Save this query to history
         appendRbiHistory(eventId, fe);
     } else {
         printf("|  Not triggered in current run                                   |\n");
         printf("+-----------------------------------------------------------------+\n");
     }
 
-    // Always show full history from all previous runs
-    printf("|  FULL HISTORY (all runs)                                        |\n");
+    printf("|  HISTORY  ->  logs/history/0x%04X_%s.csv%-*s|\n",
+           eventId, getEventName(eventId),
+           (int)(16 - strlen(getEventName(eventId))), " ");
     printf("+-----------------------------------------------------------------+\n");
     printRbiHistory(eventId);
     printf("+-----------------------------------------------------------------+\n\n");

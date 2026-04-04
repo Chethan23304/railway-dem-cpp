@@ -17,19 +17,15 @@ public:
                    Dem_DTCType     dtc,
                    const std::string& source);
 
-    // Shows current run result + ALL previous runs for this ID
     void readByIdentifier(Dem_EventIdType eventId);
-
     bool alreadyLogged(Dem_EventIdType eventId) const;
+    int  getRunNumber() const { return m_runNumber; }
 
 private:
     std::string m_logDir;
 
-    // Current run only - overwrite each time
     FILE* m_failedCsv  = nullptr;
     FILE* m_failedTxt  = nullptr;
-
-    // All runs history - append always
     FILE* m_rbiCsv     = nullptr;
 
     int  m_failedCount = 0;
@@ -47,22 +43,18 @@ private:
     };
     FailedEntry m_entries[0x00C0] = {};
 
-    // Read run number from history file
-    int  readRunNumber();
+    int         readRunNumber();
+    std::string perEventPath(Dem_EventIdType id) const;
+    void        ensurePerEventHeader(Dem_EventIdType id);
+    void        appendRbiHistory(Dem_EventIdType id, const FailedEntry& e);
+    void        printRbiHistory(Dem_EventIdType id);
 
-    // Write current run failed event
     void writeFailedCsv(const std::string& ts, Dem_EventIdType id,
                         Dem_DTCType dtc, uint8_t uds, uint8_t occ,
                         const std::string& src);
     void writeFailedTxt(const std::string& ts, Dem_EventIdType id,
                         Dem_DTCType dtc, uint8_t uds, uint8_t occ,
                         const std::string& src);
-
-    // Append one RBI query result to history file
-    void appendRbiHistory(Dem_EventIdType id, const FailedEntry& e);
-
-    // Read and print all previous RBI history for one event ID
-    void printRbiHistory(Dem_EventIdType id);
 
     std::string timestamp() const;
     std::string getSeverity(Dem_EventIdType id) const;
