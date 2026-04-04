@@ -1,0 +1,10 @@
+No,Timestamp,EventId,EventName,DTC,EventType,UDS_Status,Occurrences,Severity,Source
+1,2026-04-04 08:30:32,0x0002,Full_Supervision,0x010201,FAILED,0x2F,1,MEDIUM,KavachConditions
+2,2026-04-04 08:30:33,0x00A1,Over_Speeding,0x00A101,FAILED,0x2F,1,HIGH,KavachConditions
+3,2026-04-04 08:30:34,0x00A2,SPAD,0x00A201,FAILED,0x2F,1,HIGH,KavachConditions
+4,2026-04-04 08:30:35,0x00A3,SOS_Received,0x00A301,FAILED,0x2F,1,HIGH,KavachConditions
+5,2026-04-04 08:30:36,0x00A5,Radio_Loss,0x00A501,FAILED,0x2F,1,MEDIUM,KavachConditions
+6,2026-04-04 08:30:37,0x00A4,Roll_Back,0x00A401,FAILED,0x2F,1,HIGH,KavachConditions
+7,2026-04-04 08:30:38,0x00B1,RFID_Tag_Read,0x00B101,FAILED,0x2F,1,LOW,KavachConditions
+8,2026-04-04 08:30:39,0x00A6,Brake_Command,0x00A601,FAILED,0x2F,1,HIGH,KavachConditions
+9,2026-04-04 08:30:40,0x0007,Trip,0x010701,FAILED,0x2F,1,MEDIUM,KavachConditions

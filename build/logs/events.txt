@@ -1,0 +1,19 @@
+
+==============================================
+  Railway DEM - Kavach Event Log
+  Session: 2026-04-04 08:30:30
+==============================================
+No   Timestamp            DTC        EventName                Type       UDS      Occ  Source  
+---- -------------------- ---------- ------------------------ ---------- -------- ---- --------
+1    2026-04-04 08:30:32  0x010201 Full_Supervision         FAILED     0x2F 1    KavachConditions
+2    2026-04-04 08:30:33  0x00A101 Over_Speeding            FAILED     0x2F 1    KavachConditions
+3    2026-04-04 08:30:34  0x00A201 SPAD                     FAILED     0x2F 1    KavachConditions
+4    2026-04-04 08:30:35  0x00A301 SOS_Received             FAILED     0x2F 1    KavachConditions
+5    2026-04-04 08:30:36  0x00A501 Radio_Loss               FAILED     0x2F 1    KavachConditions
+6    2026-04-04 08:30:37  0x00A401 Roll_Back                FAILED     0x2F 1    KavachConditions
+7    2026-04-04 08:30:38  0x00B101 RFID_Tag_Read            FAILED     0x2F 1    KavachConditions
+8    2026-04-04 08:30:39  0x00A601 Brake_Command            FAILED     0x2F 1    KavachConditions
+9    2026-04-04 08:30:40  0x010701 Trip                     FAILED     0x2F 1    KavachConditions
+
+  Session Ended: 2026-04-04 08:31:00 | Total Events: 9
+==============================================

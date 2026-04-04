@@ -1,0 +1,110 @@
+[
+  {
+    "no": 1,
+    "timestamp": "2026-04-04 08:30:32",
+    "event_id": "0x0002",
+    "event_name": "Full_Supervision",
+    "dtc": "0x010201",
+    "event_type": "FAILED",
+    "uds_status": "0x2F",
+    "occurrences": 1,
+    "severity": "MEDIUM",
+    "source": "KavachConditions"
+  },
+  {
+    "no": 2,
+    "timestamp": "2026-04-04 08:30:33",
+    "event_id": "0x00A1",
+    "event_name": "Over_Speeding",
+    "dtc": "0x00A101",
+    "event_type": "FAILED",
+    "uds_status": "0x2F",
+    "occurrences": 1,
+    "severity": "HIGH",
+    "source": "KavachConditions"
+  },
+  {
+    "no": 3,
+    "timestamp": "2026-04-04 08:30:34",
+    "event_id": "0x00A2",
+    "event_name": "SPAD",
+    "dtc": "0x00A201",
+    "event_type": "FAILED",
+    "uds_status": "0x2F",
+    "occurrences": 1,
+    "severity": "HIGH",
+    "source": "KavachConditions"
+  },
+  {
+    "no": 4,
+    "timestamp": "2026-04-04 08:30:35",
+    "event_id": "0x00A3",
+    "event_name": "SOS_Received",
+    "dtc": "0x00A301",
+    "event_type": "FAILED",
+    "uds_status": "0x2F",
+    "occurrences": 1,
+    "severity": "HIGH",
+    "source": "KavachConditions"
+  },
+  {
+    "no": 5,
+    "timestamp": "2026-04-04 08:30:36",
+    "event_id": "0x00A5",
+    "event_name": "Radio_Loss",
+    "dtc": "0x00A501",
+    "event_type": "FAILED",
+    "uds_status": "0x2F",
+    "occurrences": 1,
+    "severity": "MEDIUM",
+    "source": "KavachConditions"
+  },
+  {
+    "no": 6,
+    "timestamp": "2026-04-04 08:30:37",
+    "event_id": "0x00A4",
+    "event_name": "Roll_Back",
+    "dtc": "0x00A401",
+    "event_type": "FAILED",
+    "uds_status": "0x2F",
+    "occurrences": 1,
+    "severity": "HIGH",
+    "source": "KavachConditions"
+  },
+  {
+    "no": 7,
+    "timestamp": "2026-04-04 08:30:38",
+    "event_id": "0x00B1",
+    "event_name": "RFID_Tag_Read",
+    "dtc": "0x00B101",
+    "event_type": "FAILED",
+    "uds_status": "0x2F",
+    "occurrences": 1,
+    "severity": "LOW",
+    "source": "KavachConditions"
+  },
+  {
+    "no": 8,
+    "timestamp": "2026-04-04 08:30:39",
+    "event_id": "0x00A6",
+    "event_name": "Brake_Command",
+    "dtc": "0x00A601",
+    "event_type": "FAILED",
+    "uds_status": "0x2F",
+    "occurrences": 1,
+    "severity": "HIGH",
+    "source": "KavachConditions"
+  },
+  {
+    "no": 9,
+    "timestamp": "2026-04-04 08:30:40",
+    "event_id": "0x0007",
+    "event_name": "Trip",
+    "dtc": "0x010701",
+    "event_type": "FAILED",
+    "uds_status": "0x2F",
+    "occurrences": 1,
+    "severity": "MEDIUM",
+    "source": "KavachConditions"
+  }
+]
