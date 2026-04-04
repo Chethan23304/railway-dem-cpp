@@ -14,6 +14,9 @@ include_directories(
 set(DEM_SOURCES
     bsw/dem/src/DemCore.cpp
     bsw/dem/src/EvtLogger.cpp
+    bsw/dem/src/DCM_DSL.cpp
+    bsw/dem/src/DCM_DSP.cpp
+    bsw/dem/src/DCM_DSD.cpp
 )
 
 set(NVM_SOURCES

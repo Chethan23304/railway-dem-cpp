@@ -1,6 +1,12 @@
 file(REMOVE_RECURSE
   "CMakeFiles/rail_kavach_cpp.dir/app/diag_app/main.cpp.o"
   "CMakeFiles/rail_kavach_cpp.dir/app/diag_app/main.cpp.o.d"
+  "CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSD.cpp.o"
+  "CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSD.cpp.o.d"
+  "CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSL.cpp.o"
+  "CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSL.cpp.o.d"
+  "CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSP.cpp.o"
+  "CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DCM_DSP.cpp.o.d"
   "CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DemCore.cpp.o"
   "CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/DemCore.cpp.o.d"
   "CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/EvtLogger.cpp.o"

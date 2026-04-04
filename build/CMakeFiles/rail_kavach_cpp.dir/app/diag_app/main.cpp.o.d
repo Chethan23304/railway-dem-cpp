@@ -150,4 +150,7 @@ CMakeFiles/rail_kavach_cpp.dir/app/diag_app/main.cpp.o: \
  /usr/include/asm-generic/sockios.h \
  /usr/include/x86_64-linux-gnu/bits/types/struct_osockaddr.h \
  /usr/include/x86_64-linux-gnu/bits/in.h \
- /home/chethan/railway-dem-cpp/bsw/kavach/include/KavachConditions.hpp
+ /home/chethan/railway-dem-cpp/bsw/kavach/include/KavachConditions.hpp \
+ /home/chethan/railway-dem-cpp/bsw/dem/include/DCM_DSL.hpp \
+ /home/chethan/railway-dem-cpp/bsw/dem/include/DCM_DSP.hpp \
+ /home/chethan/railway-dem-cpp/bsw/dem/include/DCM_DSD.hpp
