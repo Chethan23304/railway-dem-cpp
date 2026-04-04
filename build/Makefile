@@ -225,6 +225,30 @@ bsw/dcm/src/DCM_DSP.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSP.cpp.s
 .PHONY : bsw/dcm/src/DCM_DSP.cpp.s
 
+bsw/dem/src/Debounce.o: bsw/dem/src/Debounce.cpp.o
+.PHONY : bsw/dem/src/Debounce.o
+
+# target to build an object file
+bsw/dem/src/Debounce.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/Debounce.cpp.o
+.PHONY : bsw/dem/src/Debounce.cpp.o
+
+bsw/dem/src/Debounce.i: bsw/dem/src/Debounce.cpp.i
+.PHONY : bsw/dem/src/Debounce.i
+
+# target to preprocess a source file
+bsw/dem/src/Debounce.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/Debounce.cpp.i
+.PHONY : bsw/dem/src/Debounce.cpp.i
+
+bsw/dem/src/Debounce.s: bsw/dem/src/Debounce.cpp.s
+.PHONY : bsw/dem/src/Debounce.s
+
+# target to generate assembly for a file
+bsw/dem/src/Debounce.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/dem/src/Debounce.cpp.s
+.PHONY : bsw/dem/src/Debounce.cpp.s
+
 bsw/dem/src/DemCore.o: bsw/dem/src/DemCore.cpp.o
 .PHONY : bsw/dem/src/DemCore.o
 
@@ -390,6 +414,9 @@ help:
 	@echo "... bsw/dcm/src/DCM_DSP.o"
 	@echo "... bsw/dcm/src/DCM_DSP.i"
 	@echo "... bsw/dcm/src/DCM_DSP.s"
+	@echo "... bsw/dem/src/Debounce.o"
+	@echo "... bsw/dem/src/Debounce.i"
+	@echo "... bsw/dem/src/Debounce.s"
 	@echo "... bsw/dem/src/DemCore.o"
 	@echo "... bsw/dem/src/DemCore.i"
 	@echo "... bsw/dem/src/DemCore.s"

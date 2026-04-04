@@ -21,6 +21,8 @@ public:
 
     bool alreadyLogged(Dem_EventIdType eventId) const;
 
+public:
+    int  getRunNumber() const { return m_runNumber; }
 private:
     std::string m_logDir;
 
@@ -35,6 +37,7 @@ private:
     bool    m_logged[0x00C0] = {};
     int     m_failedCount    = 0;
     int     m_rbiCount       = 0;
+    int     m_runNumber      = 0;
 
     // Store last failed entry per eventId for RBI lookup
     struct FailedEntry {

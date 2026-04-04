@@ -9,21 +9,38 @@ EvtLogger::EvtLogger(const std::string& logDir) : m_logDir(logDir) {
     mkdir(logDir.c_str(), 0755);
 
     // ---- File 1: Failed events ----
-    m_failedCsv = fopen((logDir + "/events_failed.csv").c_str(), "w");
-    m_failedTxt = fopen((logDir + "/events_failed.txt").c_str(), "w");
+    m_failedCsv = fopen((logDir + "/events_failed.csv").c_str(), "a");
+    m_failedTxt = fopen((logDir + "/events_failed.txt").c_str(), "a");
 
-    if (m_failedCsv)
-        fprintf(m_failedCsv,
-            "No,Timestamp,EventId,EventName,DTC,"
-            "EventType,UDS_Status,Occurrences,Severity,Source\n");
+    // Write CSV header only if this is a brand new file
+    if (m_failedCsv) {
+        fseek(m_failedCsv, 0, SEEK_END);
+        long sz = ftell(m_failedCsv);
+        if (sz == 0)
+            fprintf(m_failedCsv,
+                "Run,No,Timestamp,EventId,EventName,DTC,"
+                "EventType,UDS_Status,Occurrences,Severity,Source\n");
+    }
 
     if (m_failedTxt) {
+        // Count existing runs by counting separator lines
+        fseek(m_failedTxt, 0, SEEK_END);
+        long sz = ftell(m_failedTxt);
+        if (sz == 0) {
+            m_runNumber = 1;
+        } else {
+            // Count "=== RUN" occurrences to get next run number
+            fseek(m_failedTxt, 0, SEEK_SET);
+            char line[256];
+            int count = 0;
+            while (fgets(line, sizeof(line), m_failedTxt))
+                if (strncmp(line, "=== RUN", 7) == 0) count++;
+            m_runNumber = count + 1;
+            fseek(m_failedTxt, 0, SEEK_END);
+        }
         fprintf(m_failedTxt,
-            "\n==============================================\n"
-            "  Railway DEM - FAILED Events Log\n"
-            "  Session: %s\n"
-            "==============================================\n",
-            timestamp().c_str());
+            "\n=== RUN %d === %s ==================\n",
+            m_runNumber, timestamp().c_str());
         fprintf(m_failedTxt,
             "%-4s %-20s %-10s %-24s %-8s %-4s %-8s %-8s\n",
             "No","Timestamp","DTC","EventName","UDS","Occ","Severity","Source");
@@ -34,21 +51,23 @@ EvtLogger::EvtLogger(const std::string& logDir) : m_logDir(logDir) {
     }
 
     // ---- File 2: ReadByIdentifier results ----
-    m_rbiCsv = fopen((logDir + "/events_readbyid.csv").c_str(), "w");
-    m_rbiTxt = fopen((logDir + "/events_readbyid.txt").c_str(), "w");
+    m_rbiCsv = fopen((logDir + "/events_readbyid.csv").c_str(), "a");
+    m_rbiTxt = fopen((logDir + "/events_readbyid.txt").c_str(), "a");
 
-    if (m_rbiCsv)
-        fprintf(m_rbiCsv,
-            "QueryNo,EventId,EventName,DTC,UDS_Status,"
-            "Occurrences,Severity,OriginalTimestamp\n");
+    if (m_rbiCsv) {
+        fseek(m_rbiCsv, 0, SEEK_END);
+        long sz = ftell(m_rbiCsv);
+        if (sz == 0)
+            fprintf(m_rbiCsv,
+                "Run,QueryNo,EventId,EventName,DTC,UDS_Status,"
+                "Occurrences,Severity,OriginalTimestamp\n");
+    }
 
     if (m_rbiTxt) {
+        fseek(m_rbiTxt, 0, SEEK_END);
         fprintf(m_rbiTxt,
-            "\n==============================================\n"
-            "  Railway DEM - ReadByIdentifier Query Log\n"
-            "  Session: %s\n"
-            "==============================================\n",
-            timestamp().c_str());
+            "\n=== RUN %d === %s ==================\n",
+            m_runNumber, timestamp().c_str());
         fprintf(m_rbiTxt,
             "%-4s %-10s %-24s %-10s %-8s %-4s %-8s %-20s\n",
             "No","EventId","EventName","DTC","UDS","Occ","Severity","Timestamp");
@@ -145,8 +164,8 @@ void EvtLogger::writeFailedCsv(const std::string& ts,
                                  const std::string& src) {
     if (!m_failedCsv) return;
     fprintf(m_failedCsv,
-        "%d,%s,0x%04X,%s,0x%06X,FAILED,0x%02X,%d,%s,%s\n",
-        m_failedCount, ts.c_str(), id, getEventName(id),
+        "%d,%d,%s,0x%04X,%s,0x%06X,FAILED,0x%02X,%d,%s,%s\n",
+        m_runNumber, m_failedCount, ts.c_str(), id, getEventName(id),
         dtc, uds, occ, getSeverity(id).c_str(), src.c_str());
     fflush(m_failedCsv);
 }
@@ -196,8 +215,8 @@ void EvtLogger::readByIdentifier(Dem_EventIdType eventId) {
 void EvtLogger::writeRbiCsv(Dem_EventIdType id, const FailedEntry& e) {
     if (!m_rbiCsv) return;
     fprintf(m_rbiCsv,
-        "%d,0x%04X,%s,0x%06X,0x%02X,%d,%s,%s\n",
-        m_rbiCount, id, getEventName(id),
+        "%d,%d,0x%04X,%s,0x%06X,0x%02X,%d,%s,%s\n",
+        m_runNumber, m_rbiCount, id, getEventName(id),
         e.dtc, e.udsStatus, e.occurrences,
         getSeverity(id).c_str(), e.timestamp);
     fflush(m_rbiCsv);

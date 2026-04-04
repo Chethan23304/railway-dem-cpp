@@ -15,6 +15,7 @@ include_directories(
 set(DEM_SOURCES
     bsw/dem/src/DemCore.cpp
     bsw/dem/src/EvtLogger.cpp
+    bsw/dem/src/Debounce.cpp
 )
 
 set(DCM_SOURCES

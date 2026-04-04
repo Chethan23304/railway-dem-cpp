@@ -1,4 +1,5 @@
 #include "DemCore.hpp"
+#include "Debounce.hpp"
 #include <cstring>
 #include <cstdio>
 
@@ -61,14 +62,16 @@ Std_ReturnType DemCore::setEventStatus(Dem_EventIdType id,
         return E_NOT_OK;
     }
 
-    // Counter-based debounce for PREFAILED
+    // Use Debounce class for PREFAILED handling
     if (status == DEM_EVENT_STATUS_PREFAILED) {
-        m_debounce[id]++;
-        if (m_debounce[id] < DEBOUNCE_THRESHOLD) {
+        static Debounce deb(DebounceCfg{DebounceType::Counter,
+                                        DEBOUNCE_THRESHOLD});
+        auto result = deb.reportPrefailed();
+        if (result != DebounceResult::Failed) {
             m_currentStatus[id] = DEM_EVENT_STATUS_PREFAILED;
             return E_OK;
         }
-        status = DEM_EVENT_STATUS_FAILED; // promoted
+        status = DEM_EVENT_STATUS_FAILED; // threshold reached
     } else if (status == DEM_EVENT_STATUS_PASSED) {
         m_debounce[id] = 0;
     }
