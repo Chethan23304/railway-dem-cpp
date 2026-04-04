@@ -1,0 +1,6 @@
+build/
+*.o
+*.a
+dem_nvram.bin
+logs/
+.vscode/
