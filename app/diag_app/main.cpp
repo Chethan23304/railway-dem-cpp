@@ -63,33 +63,19 @@ static void runScenario(KavachConditions& cond) {
 
 static void runDcmDemo(DCM_DSD& dsd) {
     uint8_t req[8], resp[256];
-
     printf("\n\n========================================\n");
     printf("  DCM UDS Services\n");
     printf("========================================\n");
-
     req[0]=0x10; req[1]=0x03;
     dsd.dispatch(req, 2, resp, sizeof(resp));
-
     req[0]=0x22; req[1]=0xF1; req[2]=0x90;
     dsd.dispatch(req, 3, resp, sizeof(resp));
-
-    req[0]=0x22; req[1]=0xF1; req[2]=0x86;
-    dsd.dispatch(req, 3, resp, sizeof(resp));
-
     req[0]=0x22; req[1]=0xF1; req[2]=0x00;
     dsd.dispatch(req, 3, resp, sizeof(resp));
-
     req[0]=0x19; req[1]=0x01; req[2]=DEM_UDS_STATUS_TF;
     dsd.dispatch(req, 3, resp, sizeof(resp));
-
     req[0]=0x19; req[1]=0x02; req[2]=DEM_UDS_STATUS_TF;
     dsd.dispatch(req, 3, resp, sizeof(resp));
-
-    req[0]=0x19; req[1]=0x06;
-    req[2]=0x00; req[3]=0xA1; req[4]=0x01;
-    dsd.dispatch(req, 5, resp, sizeof(resp));
-
     req[0]=0x27; req[1]=0x01;
     dsd.dispatch(req, 2, resp, sizeof(resp));
     uint32_t key = 0xDEADBEEFU ^ 0xCAFEBABEU;
@@ -99,71 +85,148 @@ static void runDcmDemo(DCM_DSD& dsd) {
     req[4]=static_cast<uint8_t>((key>> 8)&0xFF);
     req[5]=static_cast<uint8_t>( key     &0xFF);
     dsd.dispatch(req, 6, resp, sizeof(resp));
-
-    req[0]=0x14; req[1]=0xFF; req[2]=0xFF; req[3]=0xFF;
-    dsd.dispatch(req, 4, resp, sizeof(resp));
-
-    req[0]=0x19; req[1]=0x01; req[2]=DEM_UDS_STATUS_TF;
-    dsd.dispatch(req, 3, resp, sizeof(resp));
-
     req[0]=0x10; req[1]=0x01;
     dsd.dispatch(req, 2, resp, sizeof(resp));
-
-    req[0]=0x14; req[1]=0xFF; req[2]=0xFF; req[3]=0xFF;
-    dsd.dispatch(req, 4, resp, sizeof(resp));
 }
 
-static void runRbiPrompt(EvtLogger& logger) {
-    printf("\n========================================\n");
-    printf("  ReadByIdentifier - Enter Event ID\n");
-    printf("----------------------------------------\n");
-    printf("  0x00A1 = Over_Speeding\n");
-    printf("  0x00A2 = SPAD\n");
-    printf("  0x00A3 = SOS_Received\n");
-    printf("  0x00A4 = Roll_Back\n");
-    printf("  0x00A5 = Radio_Loss\n");
-    printf("  0x00A6 = Brake_Command\n");
-    printf("  0x00B1 = RFID_Tag_Read\n");
-    printf("  0x0007 = Trip\n");
-    printf("  0x0000 = Query ALL\n");
-    printf("  q      = Quit\n");
-    printf("========================================\n");
+// -------------------------------------------------------
+// Show ALL failed events from current run
+// -------------------------------------------------------
+static void showAllFailed(EvtLogger& logger, DemCore& dem) {
+    printf("\n");
+    printf("+==============================================================+\n");
+    printf("|              ALL FAILED EVENTS - CURRENT RUN                |\n");
+    printf("+==============================================================+\n");
 
-    char buf[16];
+    Dem_EventIdType allIds[] = {
+        KAVACH_EVT_OVERSPEED, KAVACH_EVT_SPAD,
+        KAVACH_EVT_SOS,       KAVACH_EVT_RADIO_LOSS,
+        KAVACH_EVT_ROLLBACK,  KAVACH_EVT_RFID,
+        KAVACH_EVT_BRAKE_CMD, KAVACH_EVT_MODE_TR
+    };
+
+    int shown = 0;
+    for (auto id : allIds) {
+        if (!logger.alreadyLogged(id)) continue;
+        shown++;
+        uint8_t uds = 0;
+        dem.getEventStatus(id, uds);
+        printf("|\n");
+        printf("|  [%d] EventId  : 0x%04X\n", shown, id);
+        printf("|      Name     : %s\n", getEventName(id));
+        printf("|      DTC      : 0x%06X\n", getDTC(id));
+        printf("|      UDS      : 0x%02X\n", uds);
+        printf("|      Severity : %s\n",
+               (id>=0x00A1&&id<=0x00A4) ? "HIGH"   :
+               (id==0x00A5)             ? "MEDIUM" :
+               (id>=0x00B1)             ? "LOW"    : "MEDIUM");
+        printf("|      Status   : FAILED\n");
+    }
+
+    if (shown == 0) {
+        printf("|  No failed events in this run.\n");
+    } else {
+        printf("|\n");
+        printf("|  Total: %d failed events\n", shown);
+        printf("|  Full details in: logs/events_failed.csv\n");
+    }
+    printf("+==============================================================+\n\n");
+}
+
+// -------------------------------------------------------
+// Interactive menu shown after scenario
+// -------------------------------------------------------
+static void runMenu(EvtLogger& logger, DemCore& dem) {
+    char buf[32];
+
     while (true) {
-        printf("\nEnter Event ID: ");
+        printf("\n========================================\n");
+        printf("  What would you like to do?\n");
+        printf("----------------------------------------\n");
+        printf("  1  or  all  -> Show all failed events\n");
+        printf("  2  or  rbi  -> ReadByIdentifier query\n");
+        printf("  q           -> Quit\n");
+        printf("========================================\n");
+        printf("Choice: ");
         fflush(stdout);
+
         if (!fgets(buf, sizeof(buf), stdin)) break;
 
         // trim newline
         for (int i = 0; buf[i]; i++)
             if (buf[i] == '\n') { buf[i] = '\0'; break; }
 
-        if (buf[0] == 'q' || buf[0] == 'Q') {
-            printf("Exiting ReadByIdentifier.\n");
-            break;
-        }
-
-        unsigned int parsed = 0;
-        if (sscanf(buf, "%x", &parsed) != 1) {
-            printf("  Invalid. Enter hex like 0x00A1 or q to quit.\n");
+        // ---- Option: show ALL failed ----
+        if (strcmp(buf,"1")==0 || strcmp(buf,"all")==0 ||
+            strcmp(buf,"ALL")==0) {
+            showAllFailed(logger, dem);
             continue;
         }
 
-        Dem_EventIdType evtId = static_cast<Dem_EventIdType>(parsed);
+        // ---- Option: ReadByIdentifier ----
+        if (strcmp(buf,"2")==0 || strcmp(buf,"rbi")==0 ||
+            strcmp(buf,"RBI")==0) {
 
-        if (evtId == 0x0000U) {
-            Dem_EventIdType all[] = {
-                KAVACH_EVT_OVERSPEED, KAVACH_EVT_SPAD,
-                KAVACH_EVT_SOS,       KAVACH_EVT_RADIO_LOSS,
-                KAVACH_EVT_ROLLBACK,  KAVACH_EVT_RFID,
-                KAVACH_EVT_BRAKE_CMD, KAVACH_EVT_MODE_TR
-            };
-            for (auto id : all)
-                logger.readByIdentifier(id);
-        } else {
-            logger.readByIdentifier(evtId);
+            printf("\n----------------------------------------\n");
+            printf("  Known Event IDs:\n");
+            printf("    0x00A1 = Over_Speeding\n");
+            printf("    0x00A2 = SPAD\n");
+            printf("    0x00A3 = SOS_Received\n");
+            printf("    0x00A4 = Roll_Back\n");
+            printf("    0x00A5 = Radio_Loss\n");
+            printf("    0x00A6 = Brake_Command\n");
+            printf("    0x00B1 = RFID_Tag_Read\n");
+            printf("    0x0007 = Trip\n");
+            printf("    0x0000 = Query ALL\n");
+            printf("    b      = Back to menu\n");
+            printf("----------------------------------------\n");
+
+            while (true) {
+                printf("\nEnter Event ID: ");
+                fflush(stdout);
+                if (!fgets(buf, sizeof(buf), stdin)) break;
+                for (int i = 0; buf[i]; i++)
+                    if (buf[i] == '\n') { buf[i] = '\0'; break; }
+
+                if (strcmp(buf,"b")==0 || strcmp(buf,"B")==0 ||
+                    strcmp(buf,"q")==0 || strcmp(buf,"Q")==0) {
+                    printf("Back to menu.\n");
+                    break;
+                }
+
+                unsigned int parsed = 0;
+                if (sscanf(buf, "%x", &parsed) != 1) {
+                    printf("  Invalid. Enter hex like A1 or 00A1. 'b' to go back.\n");
+                    continue;
+                }
+
+                Dem_EventIdType evtId =
+                    static_cast<Dem_EventIdType>(parsed);
+
+                if (evtId == 0x0000U) {
+                    // Query ALL known events
+                    Dem_EventIdType all[] = {
+                        KAVACH_EVT_OVERSPEED, KAVACH_EVT_SPAD,
+                        KAVACH_EVT_SOS,       KAVACH_EVT_RADIO_LOSS,
+                        KAVACH_EVT_ROLLBACK,  KAVACH_EVT_RFID,
+                        KAVACH_EVT_BRAKE_CMD, KAVACH_EVT_MODE_TR
+                    };
+                    for (auto id : all)
+                        logger.readByIdentifier(id);
+                } else {
+                    logger.readByIdentifier(evtId);
+                }
+            }
+            continue;
         }
+
+        // ---- Quit ----
+        if (strcmp(buf,"q")==0 || strcmp(buf,"Q")==0) {
+            printf("Exiting.\n");
+            break;
+        }
+
+        printf("  Unknown option. Type 1, 2, or q.\n");
     }
 }
 
@@ -189,17 +252,17 @@ int main() {
     printf("\n[MAIN] Running Kavach scenario...\n");
     sleep(1);
 
-    // Run the demo scenario once first
     runScenario(cond);
+    modbus.pushSnapshot(dem, 0x07, 120, 80, 0x03);
     printDtcReport(dem);
     runDcmDemo(dsd);
 
-    // Interactive ReadByIdentifier prompt
-    runRbiPrompt(logger);
+    // Interactive menu
+    runMenu(logger, dem);
 
     nvm.store(dem);
     printf("\n[MAIN] Done.\n");
-    printf("  events_failed.csv   -> all FAILED events\n");
-    printf("  events_readbyid.csv -> all RBI query results\n\n");
+    printf("  events_failed.csv  -> current run\n");
+    printf("  rbi_history.csv    -> all runs history\n\n");
     return 0;
 }
