@@ -167,19 +167,22 @@ static void runMenu(EvtLogger& logger, DemCore& dem) {
         if (strcmp(buf,"2")==0 || strcmp(buf,"rbi")==0 ||
             strcmp(buf,"RBI")==0) {
 
-            printf("\n----------------------------------------\n");
-            printf("  Known Event IDs:\n");
-            printf("    0x00A1 = Over_Speeding\n");
-            printf("    0x00A2 = SPAD\n");
-            printf("    0x00A3 = SOS_Received\n");
-            printf("    0x00A4 = Roll_Back\n");
-            printf("    0x00A5 = Radio_Loss\n");
-            printf("    0x00A6 = Brake_Command\n");
-            printf("    0x00B1 = RFID_Tag_Read\n");
-            printf("    0x0007 = Trip\n");
-            printf("    0x0000 = Query ALL\n");
-            printf("    b      = Back to menu\n");
-            printf("----------------------------------------\n");
+            printf("\n");
+            printf("+-------+----------+------------------------+----------+--------+\n");
+            printf("| Input | Event ID | Event Name             | DTC      | Sev    |\n");
+            printf("+-------+----------+------------------------+----------+--------+\n");
+            printf("|  A1   | 0x00A1   | Over_Speeding          | 0x00A101 | HIGH   |\n");
+            printf("|  A2   | 0x00A2   | SPAD                   | 0x00A201 | HIGH   |\n");
+            printf("|  A3   | 0x00A3   | SOS_Received           | 0x00A301 | HIGH   |\n");
+            printf("|  A4   | 0x00A4   | Roll_Back              | 0x00A401 | HIGH   |\n");
+            printf("|  A5   | 0x00A5   | Radio_Loss             | 0x00A501 | MEDIUM |\n");
+            printf("|  A6   | 0x00A6   | Brake_Command          | 0x00A601 | HIGH   |\n");
+            printf("|  B1   | 0x00B1   | RFID_Tag_Read          | 0x00B101 | LOW    |\n");
+            printf("|  07   | 0x0007   | Trip                   | 0x010701 | MEDIUM |\n");
+            printf("+-------+----------+------------------------+----------+--------+\n");
+            printf("|  0000 = Query ALL events                                      |\n");
+            printf("|  b or q = Back to menu                                        |\n");
+            printf("+-------+----------+------------------------+----------+--------+\n");
 
             while (true) {
                 printf("\nEnter Event ID: ");
