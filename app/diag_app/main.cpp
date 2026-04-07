@@ -8,6 +8,7 @@
 #include "KavachEth.hpp"
 #include "KavachConditions.hpp"
 #include "ModbusTcp.hpp"
+#include "KavachUdp.hpp"
 #include "DCM_DSL.hpp"
 #include "DCM_DSP.hpp"
 #include "DCM_DSD.hpp"
@@ -236,15 +237,16 @@ static void runMenu(EvtLogger& logger, DemCore& dem) {
 int main() {
     printf("\n========================================\n");
     printf("  Railway DEM/DCM - Kavach DMI (C++)\n");
-    printf("  Kavach Simulator: 192.168.0.110:1502\n");
+    printf("  Kavach Simulator: 127.0.0.1:1502\n");
     printf("========================================\n\n");
 
     DemCore          dem{};
     NvmStorage       nvm{"dem_nvram.bin"};
     EvtLogger        logger{"logs"};
-    KavachEth        eth{"192.168.0.110", 1502, 5601};
-    ModbusTcp        modbus{"192.168.0.110", 1502};
+    KavachEth        eth{"127.0.0.1", 1502, 5601};
+    ModbusTcp        modbus{"127.0.0.1", 1502};
     modbus.connect();
+    KavachUdp        udp{"127.0.0.1", KAVACH_UDP_PORT};
     KavachConditions cond{dem, logger, eth, modbus};
 
     DCM_DSL  dsl{};
@@ -256,7 +258,10 @@ int main() {
     sleep(1);
 
     runScenario(cond);
-    modbus.pushSnapshot(dem, 0x07, 120, 80, 0x03);
+    uint8_t coilFlags = KavachUdp::buildCoilFlags(dem);
+    uint8_t kavachMode = 0x07;  // TRIP - last scenario step
+    modbus.pushSnapshot(dem, kavachMode, 120, 80, 0x03);
+    udp.sendSnapshot(dem, kavachMode, 120, 80, 0x03, coilFlags);
     printDtcReport(dem);
     runDcmDemo(dsd);
 

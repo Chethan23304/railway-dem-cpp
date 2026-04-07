@@ -32,6 +32,7 @@ set(KAVACH_SOURCES
     bsw/kavach/src/KavachEth.cpp
     bsw/kavach/src/KavachConditions.cpp
     bsw/kavach/src/ModbusTcp.cpp
+    bsw/kavach/src/KavachUdp.cpp
 )
 
 find_library(MODBUS_LIB modbus REQUIRED)

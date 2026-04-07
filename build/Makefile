@@ -345,6 +345,30 @@ bsw/kavach/src/KavachEth.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/KavachEth.cpp.s
 .PHONY : bsw/kavach/src/KavachEth.cpp.s
 
+bsw/kavach/src/KavachUdp.o: bsw/kavach/src/KavachUdp.cpp.o
+.PHONY : bsw/kavach/src/KavachUdp.o
+
+# target to build an object file
+bsw/kavach/src/KavachUdp.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/KavachUdp.cpp.o
+.PHONY : bsw/kavach/src/KavachUdp.cpp.o
+
+bsw/kavach/src/KavachUdp.i: bsw/kavach/src/KavachUdp.cpp.i
+.PHONY : bsw/kavach/src/KavachUdp.i
+
+# target to preprocess a source file
+bsw/kavach/src/KavachUdp.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/KavachUdp.cpp.i
+.PHONY : bsw/kavach/src/KavachUdp.cpp.i
+
+bsw/kavach/src/KavachUdp.s: bsw/kavach/src/KavachUdp.cpp.s
+.PHONY : bsw/kavach/src/KavachUdp.s
+
+# target to generate assembly for a file
+bsw/kavach/src/KavachUdp.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/KavachUdp.cpp.s
+.PHONY : bsw/kavach/src/KavachUdp.cpp.s
+
 bsw/kavach/src/ModbusTcp.o: bsw/kavach/src/ModbusTcp.cpp.o
 .PHONY : bsw/kavach/src/ModbusTcp.o
 
@@ -429,6 +453,9 @@ help:
 	@echo "... bsw/kavach/src/KavachEth.o"
 	@echo "... bsw/kavach/src/KavachEth.i"
 	@echo "... bsw/kavach/src/KavachEth.s"
+	@echo "... bsw/kavach/src/KavachUdp.o"
+	@echo "... bsw/kavach/src/KavachUdp.i"
+	@echo "... bsw/kavach/src/KavachUdp.s"
 	@echo "... bsw/kavach/src/ModbusTcp.o"
 	@echo "... bsw/kavach/src/ModbusTcp.i"
 	@echo "... bsw/kavach/src/ModbusTcp.s"
