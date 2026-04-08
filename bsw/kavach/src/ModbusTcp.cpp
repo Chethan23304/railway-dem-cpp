@@ -148,3 +148,19 @@ Std_ReturnType ModbusTcp::pushSnapshot(DemCore& dem,
     writeSession(session);
     return E_OK;
 }
+
+Std_ReturnType ModbusTcp::readHoldingRegister(uint16_t address, uint16_t& valueOut) {
+    // DMI closes connection after each request — reconnect every time
+    disconnect();
+    if (connect() != E_OK) return E_NOT_OK;
+
+    uint16_t val = 0;
+    if (modbus_read_registers(m_ctx, address, 1, &val) == -1) {
+               address, modbus_strerror(errno));
+        disconnect();
+        return E_NOT_OK;
+    }
+    valueOut = val;
+    disconnect();
+    return E_OK;
+}

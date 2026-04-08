@@ -129,29 +129,29 @@ rail_kavach_cpp/fast:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/build
 .PHONY : rail_kavach_cpp/fast
 
-app/diag_app/main.o: app/diag_app/main.cpp.o
-.PHONY : app/diag_app/main.o
+app/main.o: app/main.cpp.o
+.PHONY : app/main.o
 
 # target to build an object file
-app/diag_app/main.cpp.o:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/app/diag_app/main.cpp.o
-.PHONY : app/diag_app/main.cpp.o
+app/main.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/app/main.cpp.o
+.PHONY : app/main.cpp.o
 
-app/diag_app/main.i: app/diag_app/main.cpp.i
-.PHONY : app/diag_app/main.i
+app/main.i: app/main.cpp.i
+.PHONY : app/main.i
 
 # target to preprocess a source file
-app/diag_app/main.cpp.i:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/app/diag_app/main.cpp.i
-.PHONY : app/diag_app/main.cpp.i
+app/main.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/app/main.cpp.i
+.PHONY : app/main.cpp.i
 
-app/diag_app/main.s: app/diag_app/main.cpp.s
-.PHONY : app/diag_app/main.s
+app/main.s: app/main.cpp.s
+.PHONY : app/main.s
 
 # target to generate assembly for a file
-app/diag_app/main.cpp.s:
-	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/app/diag_app/main.cpp.s
-.PHONY : app/diag_app/main.cpp.s
+app/main.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/app/main.cpp.s
+.PHONY : app/main.cpp.s
 
 bsw/dcm/src/DCM_DSD.o: bsw/dcm/src/DCM_DSD.cpp.o
 .PHONY : bsw/dcm/src/DCM_DSD.o
@@ -345,6 +345,30 @@ bsw/kavach/src/KavachEth.cpp.s:
 	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/KavachEth.cpp.s
 .PHONY : bsw/kavach/src/KavachEth.cpp.s
 
+bsw/kavach/src/KavachSensor.o: bsw/kavach/src/KavachSensor.cpp.o
+.PHONY : bsw/kavach/src/KavachSensor.o
+
+# target to build an object file
+bsw/kavach/src/KavachSensor.cpp.o:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/KavachSensor.cpp.o
+.PHONY : bsw/kavach/src/KavachSensor.cpp.o
+
+bsw/kavach/src/KavachSensor.i: bsw/kavach/src/KavachSensor.cpp.i
+.PHONY : bsw/kavach/src/KavachSensor.i
+
+# target to preprocess a source file
+bsw/kavach/src/KavachSensor.cpp.i:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/KavachSensor.cpp.i
+.PHONY : bsw/kavach/src/KavachSensor.cpp.i
+
+bsw/kavach/src/KavachSensor.s: bsw/kavach/src/KavachSensor.cpp.s
+.PHONY : bsw/kavach/src/KavachSensor.s
+
+# target to generate assembly for a file
+bsw/kavach/src/KavachSensor.cpp.s:
+	$(MAKE) $(MAKESILENT) -f CMakeFiles/rail_kavach_cpp.dir/build.make CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/KavachSensor.cpp.s
+.PHONY : bsw/kavach/src/KavachSensor.cpp.s
+
 bsw/kavach/src/KavachUdp.o: bsw/kavach/src/KavachUdp.cpp.o
 .PHONY : bsw/kavach/src/KavachUdp.o
 
@@ -426,9 +450,9 @@ help:
 	@echo "... edit_cache"
 	@echo "... rebuild_cache"
 	@echo "... rail_kavach_cpp"
-	@echo "... app/diag_app/main.o"
-	@echo "... app/diag_app/main.i"
-	@echo "... app/diag_app/main.s"
+	@echo "... app/main.o"
+	@echo "... app/main.i"
+	@echo "... app/main.s"
 	@echo "... bsw/dcm/src/DCM_DSD.o"
 	@echo "... bsw/dcm/src/DCM_DSD.i"
 	@echo "... bsw/dcm/src/DCM_DSD.s"
@@ -453,6 +477,9 @@ help:
 	@echo "... bsw/kavach/src/KavachEth.o"
 	@echo "... bsw/kavach/src/KavachEth.i"
 	@echo "... bsw/kavach/src/KavachEth.s"
+	@echo "... bsw/kavach/src/KavachSensor.o"
+	@echo "... bsw/kavach/src/KavachSensor.i"
+	@echo "... bsw/kavach/src/KavachSensor.s"
 	@echo "... bsw/kavach/src/KavachUdp.o"
 	@echo "... bsw/kavach/src/KavachUdp.i"
 	@echo "... bsw/kavach/src/KavachUdp.s"

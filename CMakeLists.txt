@@ -33,12 +33,13 @@ set(KAVACH_SOURCES
     bsw/kavach/src/KavachConditions.cpp
     bsw/kavach/src/ModbusTcp.cpp
     bsw/kavach/src/KavachUdp.cpp
+    bsw/kavach/src/KavachSensor.cpp
 )
 
 find_library(MODBUS_LIB modbus REQUIRED)
 
 add_executable(rail_kavach_cpp
-    app/diag_app/main.cpp
+    app/main.cpp
     ${DEM_SOURCES}
     ${DCM_SOURCES}
     ${NVM_SOURCES}

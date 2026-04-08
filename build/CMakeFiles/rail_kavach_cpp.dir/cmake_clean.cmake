@@ -1,6 +1,6 @@
 file(REMOVE_RECURSE
-  "CMakeFiles/rail_kavach_cpp.dir/app/diag_app/main.cpp.o"
-  "CMakeFiles/rail_kavach_cpp.dir/app/diag_app/main.cpp.o.d"
+  "CMakeFiles/rail_kavach_cpp.dir/app/main.cpp.o"
+  "CMakeFiles/rail_kavach_cpp.dir/app/main.cpp.o.d"
   "CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSD.cpp.o"
   "CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSD.cpp.o.d"
   "CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSL.cpp.o"
@@ -17,6 +17,8 @@ file(REMOVE_RECURSE
   "CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/KavachConditions.cpp.o.d"
   "CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/KavachEth.cpp.o"
   "CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/KavachEth.cpp.o.d"
+  "CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/KavachSensor.cpp.o"
+  "CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/KavachSensor.cpp.o.d"
   "CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/KavachUdp.cpp.o"
   "CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/KavachUdp.cpp.o.d"
   "CMakeFiles/rail_kavach_cpp.dir/bsw/kavach/src/ModbusTcp.cpp.o"
