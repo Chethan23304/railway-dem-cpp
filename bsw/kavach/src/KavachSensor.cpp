@@ -1,74 +1,54 @@
 #include "KavachSensor.hpp"
+#include <modbus/modbus.h>
 #include <cstdio>
 #include <cstring>
-#include <unistd.h>
-#include <arpa/inet.h>
-#include <sys/socket.h>
-#include <netinet/in.h>
-
-// Exactly mirrors the Python script that works
-static uint16_t rawReadReg(const char* ip, int port, uint16_t address) {
-    int sock = ::socket(AF_INET, SOCK_STREAM, 0);
-    if (sock < 0) return 0;
-
-    struct timeval tv{3, 0};
-    setsockopt(sock, SOL_SOCKET, SO_RCVTIMEO, &tv, sizeof(tv));
-    setsockopt(sock, SOL_SOCKET, SO_SNDTIMEO, &tv, sizeof(tv));
-
-    sockaddr_in addr{};
-    addr.sin_family = AF_INET;
-    addr.sin_port   = htons(port);
-    inet_pton(AF_INET, ip, &addr.sin_addr);
-
-    if (::connect(sock, (sockaddr*)&addr, sizeof(addr)) < 0) {
-        ::close(sock);
-        return 0;
-    }
-
-    // Exact same bytes Python sends: struct.pack(">HHHBBHH", 1, 0, 6, 1, 3, addr, 1)
-    uint8_t req[12] = {
-        0x00, 0x01,                          // Transaction ID
-        0x00, 0x00,                          // Protocol ID
-        0x00, 0x06,                          // Length
-        0x01,                                // Unit ID
-        0x03,                                // FC03 read holding registers
-        (uint8_t)(address >> 8),             // Address high
-        (uint8_t)(address & 0xFF),           // Address low
-        0x00, 0x01                           // Count = 1
-    };
-
-    if (send(sock, req, sizeof(req), 0) != sizeof(req)) {
-        ::close(sock);
-        return 0;
-    }
-
-    uint8_t resp[256]{};
-    int n = recv(sock, resp, sizeof(resp), 0);
-    ::close(sock);
-
-    if (n < 11 || (resp[7] & 0x80)) return 0;  // error response
-    return (uint16_t)((resp[9] << 8) | resp[10]);
-}
 
 KavachSensorData KavachSensor::readAll() {
     KavachSensorData d{};
+    d.valid = false;
 
-    d.speedPermitted = rawReadReg("192.168.0.110", 1502, 266);
-    d.speedActual    = rawReadReg("192.168.0.110", 1502, 273);
-    d.speedWarning   = rawReadReg("192.168.0.110", 1502, 275);
-    d.signalAspect   = rawReadReg("192.168.0.110", 1502, 289);
-    d.rfSignalBars   = rawReadReg("192.168.0.110", 1502, 294);
-    d.rfidStatus     = rawReadReg("192.168.0.110", 1502, 425);
-    d.sosState       = rawReadReg("192.168.0.110", 1502, 457);
-    d.emergencyBrake = rawReadReg("192.168.0.110", 1502, 469);
-    d.brakePipe      = rawReadReg("192.168.0.110", 1502, 478);
+    // One fresh connection per cycle - DMI closes after each request
+    modbus_t* ctx = modbus_new_tcp("192.168.0.110", 1502);
+    if (!ctx) return d;
+    modbus_set_response_timeout(ctx, 2, 0);
+    modbus_set_slave(ctx, 1);
+    modbus_set_debug(ctx, 0);  // suppress internal logs
+
+    if (modbus_connect(ctx) == -1) {
+        modbus_free(ctx);
+        return d;
+    }
+
+    uint16_t val = 0;
+    auto readReg = [&](uint16_t addr) -> uint16_t {
+        if (modbus_read_registers(ctx, addr, 1, &val) == -1) return 0;
+        return val;
+    };
+
+    d.speedActual    = readReg(273);  // MMI_V_TRAIN
+    d.speedPermitted = readReg(266);  // MMI_V_PERMITTED
+    d.speedWarning   = readReg(275);  // MMI_V_WARNING
+    d.rfSignalBars   = readReg(294);  // MMI_RF_SIGNAL_BAR_COUNT
+    d.sectionSpeed   = readReg(365);  // MMI_SECTION_SPEED
+
+    modbus_close(ctx);
+    modbus_free(ctx);
+
+    // Safe defaults for unpopulated registers
+    d.brakePipe      = 50;
+    d.emergencyBrake = 0;
+    d.sosState       = 0;
+    d.rfidStatus     = 1;
     d.kavachMode     = 0;
-    d.valid          = true;
 
-    printf("[KavachSensor] Speed=%d/%d km/h | Warn=%d | Signal=%d | "
-           "Radio=%d bars | Brake=%d | SOS=%d | RFID=%d\n",
-           d.speedActual, d.speedPermitted, d.speedWarning,
-           d.signalAspect, d.rfSignalBars, d.brakePipe,
-           d.sosState, d.rfidStatus);
+    d.overspeed = (d.speedActual > d.speedPermitted && d.speedPermitted > 0);
+    d.radioLost = (d.rfSignalBars == 0);
+    d.valid     = true;
+
+    printf("[KavachSensor] Speed=%d/%d km/h | %s | Radio=%d bars\n",
+           d.speedActual, d.speedPermitted,
+           d.overspeed ? "*** OVERSPEED ***" : "OK",
+           d.rfSignalBars);
+
     return d;
 }

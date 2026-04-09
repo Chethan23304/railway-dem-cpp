@@ -135,7 +135,20 @@ uint16_t DCM_DSP::process_0x22(const uint8_t* req, uint16_t reqLen,
     } else if (dataId == 0xF100U) {
         resp[respLen++] = m_dem.getEventMemoryCount();
     } else {
-        return buildNRC(0x22, NRC_REQUEST_OUT_RANGE, resp);
+        // Event ID as DID — look it up in event memory
+        bool found = false;
+        for (uint8_t i = 0; i < m_dem.getEventMemoryCount(); i++) {
+            auto e = m_dem.getEventMemoryEntry(i);
+            if (e.eventId != dataId) continue;
+            resp[respLen++] = e.udsStatusByte;
+            resp[respLen++] = static_cast<uint8_t>((e.dtc >> 16) & 0xFF);
+            resp[respLen++] = static_cast<uint8_t>((e.dtc >>  8) & 0xFF);
+            resp[respLen++] = static_cast<uint8_t>( e.dtc        & 0xFF);
+            resp[respLen++] = e.occurrences;
+            found = true;
+            break;
+        }
+        if (!found) return buildNRC(0x22, NRC_REQUEST_OUT_RANGE, resp);
     }
     return respLen;
 }

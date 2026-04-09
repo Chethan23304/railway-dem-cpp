@@ -60,6 +60,7 @@ public:
     // Read input registers from simulator (e.g. commands back)
     Std_ReturnType readInputRegister(uint16_t address, uint16_t& valueOut);
     Std_ReturnType readHoldingRegister(uint16_t address, uint16_t& valueOut);
+    Std_ReturnType readHoldingBlock(uint16_t start, uint16_t count, uint16_t* out);
 
     // Push full DEM snapshot - call once after scenario step
     Std_ReturnType pushSnapshot(DemCore& dem, uint8_t mode,

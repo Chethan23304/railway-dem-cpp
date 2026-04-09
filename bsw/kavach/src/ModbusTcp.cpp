@@ -23,6 +23,8 @@ Std_ReturnType ModbusTcp::connect() {
 
     // Set response timeout to 2 seconds
     modbus_set_response_timeout(m_ctx, 2, 0);
+    modbus_set_slave(m_ctx, 1);  // DMI uses slave ID 1
+    modbus_set_slave(m_ctx, 1);  // DMI uses slave ID 1
 
     // Try to connect
     if (modbus_connect(m_ctx) == -1) {
@@ -46,7 +48,6 @@ void ModbusTcp::disconnect() {
         modbus_free(m_ctx);
         m_ctx       = nullptr;
         m_connected = false;
-        printf("[ModbusTcp] Disconnected\n");
     }
 }
 
@@ -150,17 +151,37 @@ Std_ReturnType ModbusTcp::pushSnapshot(DemCore& dem,
 }
 
 Std_ReturnType ModbusTcp::readHoldingRegister(uint16_t address, uint16_t& valueOut) {
-    // DMI closes connection after each request — reconnect every time
-    disconnect();
-    if (connect() != E_OK) return E_NOT_OK;
-
+    // Reuse existing connection - do NOT disconnect/reconnect every call
+    if (!m_connected || !m_ctx) {
+        if (connect() != E_OK) return E_NOT_OK;
+    }
     uint16_t val = 0;
     if (modbus_read_registers(m_ctx, address, 1, &val) == -1) {
-               address, modbus_strerror(errno));
-        disconnect();
-        return E_NOT_OK;
+        // Only reconnect if read actually fails
+        if (connect() != E_OK) return E_NOT_OK;
+        if (modbus_read_registers(m_ctx, address, 1, &val) == -1)
+            return E_NOT_OK;
     }
     valueOut = val;
-    disconnect();
+    return E_OK;
+}
+
+
+Std_ReturnType ModbusTcp::readHoldingBlock(uint16_t start, uint16_t count, uint16_t* out) {
+    if (!m_connected) return E_NOT_OK;
+    if (modbus_read_registers(m_ctx, start, count, out) == -1) {
+        reconnect();
+        return E_NOT_OK;
+    }
+    return E_OK;
+}
+
+
+Std_ReturnType ModbusTcp::readHoldingBlock(uint16_t start, uint16_t count, uint16_t* out) {
+    if (!m_connected) return E_NOT_OK;
+    if (modbus_read_registers(m_ctx, start, count, out) == -1) {
+        reconnect();
+        return E_NOT_OK;
+    }
     return E_OK;
 }
