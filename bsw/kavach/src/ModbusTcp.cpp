@@ -24,7 +24,6 @@ Std_ReturnType ModbusTcp::connect() {
     // Set response timeout to 2 seconds
     modbus_set_response_timeout(m_ctx, 2, 0);
     modbus_set_slave(m_ctx, 1);  // DMI uses slave ID 1
-    modbus_set_slave(m_ctx, 1);  // DMI uses slave ID 1
 
     // Try to connect
     if (modbus_connect(m_ctx) == -1) {
@@ -165,17 +164,6 @@ Std_ReturnType ModbusTcp::readHoldingRegister(uint16_t address, uint16_t& valueO
     valueOut = val;
     return E_OK;
 }
-
-
-Std_ReturnType ModbusTcp::readHoldingBlock(uint16_t start, uint16_t count, uint16_t* out) {
-    if (!m_connected) return E_NOT_OK;
-    if (modbus_read_registers(m_ctx, start, count, out) == -1) {
-        reconnect();
-        return E_NOT_OK;
-    }
-    return E_OK;
-}
-
 
 Std_ReturnType ModbusTcp::readHoldingBlock(uint16_t start, uint16_t count, uint16_t* out) {
     if (!m_connected) return E_NOT_OK;
