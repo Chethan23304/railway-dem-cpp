@@ -16,6 +16,21 @@
 
 static constexpr int CONFIRM_CYCLES = 4;
 
+// Helper: Safe input with buffer flushing
+static void safeGetLine(char* buf, int size) {
+    if (!fgets(buf, size, stdin)) {
+        buf[0] = '\0';
+        return;
+    }
+    // Strip trailing newline
+    for (int i = 0; buf[i]; i++) {
+        if (buf[i] == '\n') {
+            buf[i] = '\0';
+            break;
+        }
+    }
+}
+
 static void printDtcReport(DemCore& dem) {
     printf("\n========================================\n");
     printf("  DTC Report (UDS 0x19)\n");
@@ -33,7 +48,6 @@ static void printDtcReport(DemCore& dem) {
     }
     printf("========================================\n");
 }
-
 
 // ── UDS Response Decoder ──────────────────────────────────────────
 static void decodeResponse(const uint8_t* resp, uint16_t len) {
@@ -168,11 +182,7 @@ static void runMenu(EvtLogger& logger, DemCore& dem, DCM_DSD& dsd) {
         printf("========================================\n");
         printf("Choice: ");
         fflush(stdout);
-        if (!fgets(buf, sizeof(buf), stdin)) break;
-        
-        // Strip trailing newline
-        for (int i = 0; buf[i]; i++)
-            if (buf[i] == '\n') { buf[i] = '\0'; break; }
+        safeGetLine(buf, sizeof(buf));
         
         // Skip empty input
         if (buf[0] == '\0') continue;
@@ -198,12 +208,12 @@ static void runMenu(EvtLogger& logger, DemCore& dem, DCM_DSD& dsd) {
             while (true) {
                 printf("\nEnter Event ID: ");
                 fflush(stdout);
-                if (!fgets(buf, sizeof(buf), stdin)) break;
-                for (int i = 0; buf[i]; i++)
-                    if (buf[i] == '\n') { buf[i] = '\0'; break; }
-                if (strcmp(buf,"b")==0 || strcmp(buf,"B")==0 ||
+                safeGetLine(buf, sizeof(buf));
+                
+                if (buf[0] == '\0' || strcmp(buf,"b")==0 || strcmp(buf,"B")==0 ||
                     strcmp(buf,"q")==0 || strcmp(buf,"Q")==0) {
-                    printf("Back to menu.\n"); break;
+                    if (buf[0] != '\0') printf("Back to menu.\n");
+                    break;
                 }
                 unsigned int parsed = 0;
                 if (sscanf(buf, "%x", &parsed) != 1) {
@@ -241,8 +251,7 @@ static void runMenu(EvtLogger& logger, DemCore& dem, DCM_DSD& dsd) {
             printf("Session: ");
             fflush(stdout);
             char sbuf[16]{};
-            if (!fgets(sbuf, sizeof(sbuf), stdin)) continue;
-            for (int i=0;sbuf[i];i++) if(sbuf[i]=='\n'){sbuf[i]='\0';break;}
+            safeGetLine(sbuf, sizeof(sbuf));
             if (strcmp(sbuf,"b")==0 || strcmp(sbuf,"B")==0) continue;
 
             uint8_t sessionId = 0x01;
@@ -293,8 +302,7 @@ static void runMenu(EvtLogger& logger, DemCore& dem, DCM_DSD& dsd) {
                 printf("Service: ");
                 fflush(stdout);
                 char dbuf[16]{};
-                if (!fgets(dbuf, sizeof(dbuf), stdin)) break;
-                for (int i=0;dbuf[i];i++) if(dbuf[i]=='\n'){dbuf[i]='\0';break;}
+                safeGetLine(dbuf, sizeof(dbuf));
 
                 if (strcmp(dbuf,"b")==0 || strcmp(dbuf,"B")==0) break;
 
@@ -353,7 +361,8 @@ static void runMenu(EvtLogger& logger, DemCore& dem, DCM_DSD& dsd) {
                     printf("  1=Enable  2=Disable: ");
                     fflush(stdout);
                     char xbuf[8]{};
-                    if(fgets(xbuf,8,stdin)){
+                    safeGetLine(xbuf, sizeof(xbuf));
+                    if (xbuf[0] != '\0') {
                         req[0]=0x85;
                         req[1]=(xbuf[0]=='2') ? 0x02 : 0x01;
                         { uint16_t rlen = dsd.dispatch(req,2,resp,64); decodeResponse(resp, rlen); }
@@ -368,18 +377,16 @@ static void runMenu(EvtLogger& logger, DemCore& dem, DCM_DSD& dsd) {
                     printf("  1=Hard  2=KeyOffOn  3=Soft: ");
                     fflush(stdout);
                     char xbuf[8]{};
-                    if(fgets(xbuf,8,stdin)){
+                    safeGetLine(xbuf, sizeof(xbuf));
+                    if (xbuf[0] != '\0') {
                         req[0]=0x11;
                         req[1]=(xbuf[0]=='1')?0x01:(xbuf[0]=='2')?0x02:0x03;
                         { uint16_t rlen = dsd.dispatch(req,2,resp,64); decodeResponse(resp, rlen); }
                     }
-                } else {
+                } else if (strcmp(dbuf,"b")!=0 && strcmp(dbuf,"B")!=0) {
                     printf("  Unknown service.\n");
                 }
             }
-
-            // Switch to extended session
-            req[0]=0x10; req[1]=0x03;
 
         } else if (strcmp(buf,"q")==0 || strcmp(buf,"Q")==0) {
             printf("Exiting.\n");
