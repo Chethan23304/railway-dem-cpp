@@ -131,7 +131,7 @@ Std_ReturnType DemCore::setDTCFilter(Dem_DTCStatusMask mask,
 Std_ReturnType DemCore::getNextFilteredDTC(DtcFilter& filter,
                                             Dem_DTCType& dtcOut,
                                             uint8_t& statusOut) const {
-    while (filter.currentIndex < 0x00C0U) {
+    while (filter.currentIndex < 0x00C2U) {
         uint16_t id = filter.currentIndex++;
         if (!isValidEvent(static_cast<Dem_EventIdType>(id))) continue;
         if ((m_udsStatus[id] & filter.statusMask) != 0) {
@@ -146,7 +146,7 @@ Std_ReturnType DemCore::getNextFilteredDTC(DtcFilter& filter,
 Std_ReturnType DemCore::getNumberOfFilteredDTC(DtcFilter& filter,
                                                 uint16_t& countOut) const {
     countOut = 0;
-    for (uint16_t id = 0; id < 0x00C0U; id++) {
+    for (uint16_t id = 0; id < 0x00C2U; id++) {
         if (!isValidEvent(static_cast<Dem_EventIdType>(id))) continue;
         if ((m_udsStatus[id] & filter.statusMask) != 0)
             countOut++;
