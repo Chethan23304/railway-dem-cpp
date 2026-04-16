@@ -1,6 +1,26 @@
+# Build
 build/
 *.o
 *.a
-dem_nvram.bin
-logs/
+*.so
+*.dylib
+CMakeFiles/
+cmake_install.cmake
+Makefile
+*.cmake
+
+# Backups
+*.bak
+*.issue-v*
+*.swp
+*.swo
+*~
+
+# IDE
 .vscode/
+.idea/
+*.code-workspace
+
+# Runtime
+*.bin
+logs/
