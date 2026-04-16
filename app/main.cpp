@@ -163,14 +163,19 @@ static void runMenu(EvtLogger& logger, DemCore& dem, DCM_DSD& dsd) {
         printf("----------------------------------------\n");
         printf("  1  or  all  -> Show all failed events\n");
         printf("  2  or  rbi  -> ReadByIdentifier query\n");
-    printf("  3  or  dcm  -> DCM UDS Services (session based)\n");
+        printf("  3  or  dcm  -> DCM UDS Services (session based)\n");
         printf("  q           -> Quit\n");
         printf("========================================\n");
         printf("Choice: ");
         fflush(stdout);
         if (!fgets(buf, sizeof(buf), stdin)) break;
+        
+        // Strip trailing newline
         for (int i = 0; buf[i]; i++)
             if (buf[i] == '\n') { buf[i] = '\0'; break; }
+        
+        // Skip empty input
+        if (buf[0] == '\0') continue;
 
         if (strcmp(buf,"1")==0 || strcmp(buf,"all")==0) {
             printDtcReport(dem);
@@ -238,7 +243,7 @@ static void runMenu(EvtLogger& logger, DemCore& dem, DCM_DSD& dsd) {
             char sbuf[16]{};
             if (!fgets(sbuf, sizeof(sbuf), stdin)) continue;
             for (int i=0;sbuf[i];i++) if(sbuf[i]=='\n'){sbuf[i]='\0';break;}
-            if (strcmp(sbuf,"b")==0) continue;
+            if (strcmp(sbuf,"b")==0 || strcmp(sbuf,"B")==0) continue;
 
             uint8_t sessionId = 0x01;
             const char* sessionName = "DEFAULT";
@@ -291,7 +296,7 @@ static void runMenu(EvtLogger& logger, DemCore& dem, DCM_DSD& dsd) {
                 if (!fgets(dbuf, sizeof(dbuf), stdin)) break;
                 for (int i=0;dbuf[i];i++) if(dbuf[i]=='\n'){dbuf[i]='\0';break;}
 
-                if (strcmp(dbuf,"b")==0) break;
+                if (strcmp(dbuf,"b")==0 || strcmp(dbuf,"B")==0) break;
 
                 else if (strcmp(dbuf,"1")==0) {
                     req[0]=0x3E; req[1]=0x00;
