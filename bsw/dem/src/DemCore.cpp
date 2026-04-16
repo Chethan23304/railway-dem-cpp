@@ -95,6 +95,21 @@ Std_ReturnType DemCore::setEventStatus(Dem_EventIdType id,
             e->udsStatusByte = m_udsStatus[id];
             e->currentStatus = status;
             e->agingCounter++;
+            
+            // Auto-clear when aging threshold reached
+            if (e->agingCounter >= AGING_THRESHOLD) {
+                printf("[DemCore] DTC 0x%06X aged out after %d cycles\n", 
+                       e->dtc, e->agingCounter);
+                // Remove entry from memory by shifting remaining entries
+                for (uint8_t i = 0; i < m_memCount - 1; i++) {
+                    if (m_memory[i].eventId == id) {
+                        m_memory[i] = m_memory[i + 1];
+                        m_memCount--;
+                        m_udsStatus[id] = 0;  // Clear UDS status
+                        break;
+                    }
+                }
+            }
         }
     }
     return E_OK;
