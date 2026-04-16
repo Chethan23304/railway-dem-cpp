@@ -6,10 +6,12 @@
 #include <arpa/inet.h>
 #include <sys/socket.h>
 
-KavachUdp::KavachUdp(const std::string& dmiIp, uint16_t port) {
+KavachUdp::KavachUdp(const std::string& dmiIp, uint16_t port, DemCore* dem)
+    : m_dem(dem) {
     m_sock = socket(AF_INET, SOCK_DGRAM, 0);
     if (m_sock < 0) {
         perror("[KavachUdp] socket");
+        if (m_dem) m_dem->setEventStatus(KAVACH_EVT_UDP_FAULT, DEM_EVENT_STATUS_FAILED);
         return;
     }
     memset(&m_dmiAddr, 0, sizeof(m_dmiAddr));
@@ -19,6 +21,7 @@ KavachUdp::KavachUdp(const std::string& dmiIp, uint16_t port) {
 
     printf("[KavachUdp] Ready -> %s:%u  (no connection needed)\n",
            dmiIp.c_str(), port);
+    if (m_dem) m_dem->setEventStatus(KAVACH_EVT_UDP_FAULT, DEM_EVENT_STATUS_PASSED);
 }
 
 KavachUdp::~KavachUdp() {
@@ -29,12 +32,22 @@ KavachUdp::~KavachUdp() {
 }
 
 void KavachUdp::sendFrame(const KavachUdpFrame& frame) {
-    if (m_sock < 0) return;
-    sendto(m_sock,
-           reinterpret_cast<const void*>(&frame),
-           sizeof(KavachUdpFrame), 0,
-           reinterpret_cast<const sockaddr*>(&m_dmiAddr),
-           sizeof(m_dmiAddr));
+    if (m_sock < 0) {
+        if (m_dem) m_dem->setEventStatus(KAVACH_EVT_UDP_FAULT, DEM_EVENT_STATUS_FAILED);
+        return;
+    }
+    int rc = sendto(m_sock,
+                    reinterpret_cast<const void*>(&frame),
+                    sizeof(KavachUdpFrame), 0,
+                    reinterpret_cast<const sockaddr*>(&m_dmiAddr),
+                    sizeof(m_dmiAddr));
+    
+    if (rc < 0) {
+        perror("[KavachUdp] sendto failed");
+        if (m_dem) m_dem->setEventStatus(KAVACH_EVT_UDP_FAULT, DEM_EVENT_STATUS_FAILED);
+    } else {
+        if (m_dem) m_dem->setEventStatus(KAVACH_EVT_UDP_FAULT, DEM_EVENT_STATUS_PASSED);
+    }
 }
 
 void KavachUdp::sendEvent(uint8_t  msgType, uint16_t eventId,

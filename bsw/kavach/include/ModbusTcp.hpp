@@ -34,7 +34,8 @@ constexpr uint16_t MB_COIL_TRIP_MODE   = 7U;
 class ModbusTcp {
 public:
     ModbusTcp(const std::string& ip   = "192.168.0.110",
-              uint16_t           port = 1502);
+              uint16_t           port = 1502,
+              DemCore*           dem  = nullptr);
     ~ModbusTcp();
 
     // Connect to simulator - returns E_OK if connected
@@ -70,8 +71,9 @@ public:
 private:
     std::string  m_ip;
     uint16_t     m_port;
-    modbus_t*    m_ctx       = nullptr;
-    bool         m_connected = false;
+    DemCore*     m_dem        = nullptr;
+    modbus_t*    m_ctx        = nullptr;
+    bool         m_connected  = false;
 
     // Retry connect on failure
     Std_ReturnType reconnect();

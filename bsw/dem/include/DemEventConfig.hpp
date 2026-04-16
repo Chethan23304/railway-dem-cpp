@@ -13,6 +13,10 @@ constexpr Dem_EventIdType KAVACH_EVT_MODE_SR  = 0x0004U;  // Staff Responsible
 constexpr Dem_EventIdType KAVACH_EVT_MODE_SH  = 0x0005U;  // Shunting
 constexpr Dem_EventIdType KAVACH_EVT_MODE_OS  = 0x0006U;  // On Sight
 constexpr Dem_EventIdType KAVACH_EVT_MODE_TR  = 0x0007U;  // Trip
+
+// Communication fault events
+#define KAVACH_EVT_MODBUS_FAULT    0x00C0  // DTC 0x00C101
+#define KAVACH_EVT_UDP_FAULT       0x00C1  // DTC 0x00C301
 constexpr Dem_EventIdType KAVACH_EVT_MODE_PT  = 0x0008U;  // Post Trip
 constexpr Dem_EventIdType KAVACH_EVT_MODE_RV  = 0x0009U;  // Reverse
 constexpr Dem_EventIdType KAVACH_EVT_MODE_SF  = 0x000FU;  // System Failure

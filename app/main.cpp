@@ -34,7 +34,128 @@ static void printDtcReport(DemCore& dem) {
     printf("========================================\n");
 }
 
-static void runMenu(EvtLogger& logger, DemCore& dem) {
+
+// ── UDS Response Decoder ──────────────────────────────────────────
+static void decodeResponse(const uint8_t* resp, uint16_t len) {
+    if (len == 0) { printf("  [No response]\n"); return; }
+
+    if (resp[0] == 0x7F) {
+        // NEGATIVE RESPONSE
+        const char* nrcName = "Unknown";
+        switch(resp[2]) {
+            case 0x10: nrcName="generalReject"; break;
+            case 0x11: nrcName="serviceNotSupported"; break;
+            case 0x12: nrcName="subFunctionNotSupported"; break;
+            case 0x13: nrcName="incorrectMessageLength"; break;
+            case 0x22: nrcName="conditionsNotCorrect"; break;
+            case 0x24: nrcName="requestSequenceError"; break;
+            case 0x25: nrcName="noResponseFromSubnetComponent"; break;
+            case 0x31: nrcName="requestOutOfRange"; break;
+            case 0x33: nrcName="securityAccessDenied"; break;
+            case 0x35: nrcName="invalidKey"; break;
+            case 0x36: nrcName="exceededNumberOfAttempts"; break;
+            case 0x37: nrcName="requiredTimeDelayNotExpired"; break;
+            case 0x78: nrcName="requestCorrectlyReceivedResponsePending"; break;
+        }
+        printf("  ┌─ NEGATIVE RESPONSE ─────────────────┐\n");
+        printf("  │  0x7F = NegativeResponse            │\n");
+        printf("  │  0x%02X = SID that was rejected        │\n", resp[1]);
+        printf("  │  0x%02X = NRC: %-24s│\n", resp[2], nrcName);
+        printf("  └─────────────────────────────────────┘\n");
+        return;
+    }
+
+    // POSITIVE RESPONSE
+    printf("  ┌─ POSITIVE RESPONSE ─────────────────┐\n");
+    switch(resp[0]) {
+        case 0x50:
+            printf("  │  0x50 = DiagSessionControl +PR      │\n");
+            printf("  │  0x%02X = Session granted              │\n", resp[1]);
+            if (resp[1]==0x01) printf("  │         -> DEFAULT session           │\n");
+            if (resp[1]==0x02) printf("  │         -> PROGRAMMING session       │\n");
+            if (resp[1]==0x03) printf("  │         -> EXTENDED session          │\n");
+            break;
+        case 0x51:
+            printf("  │  0x51 = ECUReset +PR                │\n");
+            printf("  │  0x%02X = ResetType                   │\n", resp[1]);
+            if (resp[1]==0x01) printf("  │         -> Hard Reset                │\n");
+            if (resp[1]==0x02) printf("  │         -> KeyOffOn Reset            │\n");
+            if (resp[1]==0x03) printf("  │         -> Soft Reset                │\n");
+            break;
+        case 0x54:
+            printf("  │  0x54 = ClearDTC +PR                │\n");
+            printf("  │         -> DTCs cleared OK           │\n");
+            break;
+        case 0x59:
+            printf("  │  0x59 = ReadDTCInfo +PR             │\n");
+            printf("  │  0x%02X = SubFunction                  │\n", resp[1]);
+            if (resp[1]==0x01 && len>=6)
+                printf("  │  DTC count = %d                     │\n",
+                       (resp[4]<<8)|resp[5]);
+            if (resp[1]==0x02) {
+                int dtcs = (len-3)/4;
+                printf("  │  DTCs found = %d                    │\n", dtcs);
+                for (int i=0;i<dtcs&&i<4;i++) {
+                    int o=3+(i*4);
+                    printf("  │    DTC: 0x%02X%02X%02X  UDS: 0x%02X       │\n",
+                           resp[o],resp[o+1],resp[o+2],resp[o+3]);
+                }
+            }
+            break;
+        case 0x62:
+            printf("  │  0x62 = ReadDataById +PR            │\n");
+            printf("  │  DID:  0x%02X%02X                       │\n", resp[1],resp[2]);
+            if (resp[1]==0xF1 && resp[2]==0x90) {
+                printf("  │  VIN:  ");
+                for (int i=3;i<len&&i<20;i++)
+                    printf("%c", resp[i]>0x20?resp[i]:'?');
+                printf("                │\n");
+            } else if (resp[1]==0xF1 && resp[2]==0x86) {
+                printf("  │  Session: 0x%02X                     │\n", resp[3]);
+            }
+            break;
+        case 0x67:
+            printf("  │  0x67 = SecurityAccess +PR          │\n");
+            if (resp[1]==0x01 && len>=6) {
+                uint32_t seed=((uint32_t)resp[2]<<24)|((uint32_t)resp[3]<<16)|
+                              ((uint32_t)resp[4]<<8)|resp[5];
+                printf("  │  0x01 = SeedRequested               │\n");
+                printf("  │  Seed: 0x%08X                  │\n", seed);
+                printf("  │  Key:  0x%08X (seed^0xCAFEBABE)│\n", seed^0xCAFEBABEU);
+            } else if (resp[1]==0x02) {
+                printf("  │  0x02 = KeyAccepted -> UNLOCKED     │\n");
+            }
+            break;
+        case 0x6E:
+            printf("  │  0x6E = WriteDataById +PR           │\n");
+            printf("  │  DID:  0x%02X%02X written OK            │\n", resp[1],resp[2]);
+            break;
+        case 0x71:
+            printf("  │  0x71 = RoutineControl +PR          │\n");
+            printf("  │  0x%02X = SubFunction                  │\n", resp[1]);
+            printf("  │  Routine: 0x%02X%02X                    │\n", resp[2],resp[3]);
+            if (len>4) printf("  │  Status:  0x%02X                     │\n", resp[4]);
+            break;
+        case 0x7E:
+            printf("  │  0x7E = TesterPresent +PR           │\n");
+            printf("  │         -> Session kept alive        │\n");
+            break;
+        case 0xC5:
+            printf("  │  0xC5 = ControlDTCSetting +PR       │\n");
+            printf("  │  0x%02X = %s                │\n", resp[1],
+                   resp[1]==0x01?"DTC setting ENABLED ":"DTC setting DISABLED");
+            break;
+        default:
+            printf("  │  0x%02X = Response                    │\n", resp[0]);
+    }
+    printf("  │  Raw: ");
+    for (int i=0;i<len&&i<8;i++) printf("%02X ",resp[i]);
+    if (len>8) printf("...");
+    printf("│\n");
+    printf("  └─────────────────────────────────────┘\n");
+}
+// ─────────────────────────────────────────────────────────────────
+static void runMenu(EvtLogger& logger, DemCore& dem, DCM_DSD& dsd) {
     char buf[32]{};
     while (true) {
         printf("\n========================================\n");
@@ -42,6 +163,7 @@ static void runMenu(EvtLogger& logger, DemCore& dem) {
         printf("----------------------------------------\n");
         printf("  1  or  all  -> Show all failed events\n");
         printf("  2  or  rbi  -> ReadByIdentifier query\n");
+    printf("  3  or  dcm  -> DCM UDS Services (session based)\n");
         printf("  q           -> Quit\n");
         printf("========================================\n");
         printf("Choice: ");
@@ -99,6 +221,161 @@ static void runMenu(EvtLogger& logger, DemCore& dem) {
                 }
             }
 
+        } else if (strcmp(buf,"3")==0 || strcmp(buf,"dcm")==0) {
+            uint8_t req[20]{}, resp[64]{};
+
+            // ── Step 1: Select Session ──
+            printf("\n========================================\n");
+            printf("  SELECT SESSION\n");
+            printf("========================================\n");
+            printf("  1 -> Default Session     (0x01)\n");
+            printf("  2 -> Extended Session    (0x03)\n");
+            printf("  3 -> Programming Session (0x02)\n");
+            printf("  b -> Back to menu\n");
+            printf("========================================\n");
+            printf("Session: ");
+            fflush(stdout);
+            char sbuf[16]{};
+            if (!fgets(sbuf, sizeof(sbuf), stdin)) continue;
+            for (int i=0;sbuf[i];i++) if(sbuf[i]=='\n'){sbuf[i]='\0';break;}
+            if (strcmp(sbuf,"b")==0) continue;
+
+            uint8_t sessionId = 0x01;
+            const char* sessionName = "DEFAULT";
+            if (strcmp(sbuf,"1")==0) { sessionId=0x01; sessionName="DEFAULT"; }
+            else if (strcmp(sbuf,"2")==0) { sessionId=0x03; sessionName="EXTENDED"; }
+            else if (strcmp(sbuf,"3")==0) { sessionId=0x02; sessionName="PROGRAMMING"; }
+            else { printf("  Invalid session.\n"); continue; }
+
+            // Switch session
+            req[0]=0x10; req[1]=sessionId;
+            { uint16_t rlen = dsd.dispatch(req,2,resp,64); decodeResponse(resp, rlen); }
+            printf("\n  >> Now in %s session\n\n", sessionName);
+
+            // ── Step 2: Select Service ──
+            while (true) {
+                printf("========================================\n");
+                printf("  DCM SERVICES  [Session: %s]\n", sessionName);
+                printf("========================================\n");
+                // 0x3E allowed in ALL sessions
+                printf("  1  -> 0x3E TesterPresent        [ALL sessions]\n");
+                // 0x22 allowed in DEFAULT + EXTENDED
+                if (sessionId==0x01||sessionId==0x03)
+                    printf("  3  -> 0x22 ReadDataById          [DEFAULT/EXTENDED]\n");
+                // 0x19 allowed in DEFAULT + EXTENDED
+                if (sessionId==0x01||sessionId==0x03)
+                    printf("  4  -> 0x19 ReadDTCInfo           [DEFAULT/EXTENDED]\n");
+                // 0x27 allowed in EXTENDED + PROGRAMMING
+                if (sessionId==0x03||sessionId==0x02)
+                    printf("  2  -> 0x27 SecurityAccess        [EXTENDED/PROG]\n");
+                // 0x14 allowed in EXTENDED only
+                if (sessionId==0x03)
+                    printf("  5  -> 0x14 ClearDTC              [EXTENDED only]\n");
+                // 0x31 allowed in EXTENDED + PROGRAMMING
+                if (sessionId==0x03||sessionId==0x02)
+                    printf("  6  -> 0x31 RoutineControl        [EXTENDED/PROG]\n");
+                // 0x85 allowed in EXTENDED only
+                if (sessionId==0x03)
+                    printf("  7  -> 0x85 ControlDTCSetting     [EXTENDED only]\n");
+                // 0x2E allowed in PROGRAMMING only
+                if (sessionId==0x02)
+                    printf("  8  -> 0x2E WriteDataById         [PROG only - needs unlock]\n");
+                // 0x11 allowed in EXTENDED + PROGRAMMING
+                if (sessionId==0x03||sessionId==0x02)
+                    printf("  9  -> 0x11 ECUReset              [EXTENDED/PROG]\n");
+                printf("  b  -> Back to menu\n");
+                printf("========================================\n");
+                printf("Service: ");
+                fflush(stdout);
+                char dbuf[16]{};
+                if (!fgets(dbuf, sizeof(dbuf), stdin)) break;
+                for (int i=0;dbuf[i];i++) if(dbuf[i]=='\n'){dbuf[i]='\0';break;}
+
+                if (strcmp(dbuf,"b")==0) break;
+
+                else if (strcmp(dbuf,"1")==0) {
+                    req[0]=0x3E; req[1]=0x00;
+                    { uint16_t rlen = dsd.dispatch(req,2,resp,64); decodeResponse(resp, rlen); }
+
+                } else if (strcmp(dbuf,"2")==0) {
+                    // Request seed
+                    req[0]=0x27; req[1]=0x01;
+                    uint16_t len = dsd.dispatch(req,2,resp,64);
+                    decodeResponse(resp, len);
+                    if (len >= 6 && resp[0]==0x67) {
+                        // Auto compute key
+                        uint32_t seed = ((uint32_t)resp[2]<<24)|((uint32_t)resp[3]<<16)|
+                                        ((uint32_t)resp[4]<<8)|resp[5];
+                        uint32_t key  = seed ^ 0xCAFEBABEU;
+                        req[0]=0x27; req[1]=0x02;
+                        req[2]=(key>>24)&0xFF; req[3]=(key>>16)&0xFF;
+                        req[4]=(key>>8)&0xFF;  req[5]=key&0xFF;
+                        { uint16_t rlen = dsd.dispatch(req,6,resp,64); decodeResponse(resp, rlen); }
+                        printf("  >> Security UNLOCKED\n");
+                    } else {
+                        printf("  >> Seed request denied (wrong session?)\n");
+                    }
+
+                } else if (strcmp(dbuf,"3")==0) {
+                    req[0]=0x22; req[1]=0xF1; req[2]=0x90;
+                    { uint16_t rlen = dsd.dispatch(req,3,resp,64); decodeResponse(resp, rlen); }
+                    if (resp[0]==0x62) {
+                        printf("  VIN: ");
+                        for (int i=3;i<20&&i<64;i++) printf("%c",resp[i]>0x20?resp[i]:'?');
+                        printf("\n");
+                    }
+                    req[0]=0x22; req[1]=0xF1; req[2]=0x86;
+                    { uint16_t rlen = dsd.dispatch(req,3,resp,64); decodeResponse(resp, rlen); }
+                    req[0]=0x22; req[1]=0xF1; req[2]=0x00;
+                    { uint16_t rlen = dsd.dispatch(req,3,resp,64); decodeResponse(resp, rlen); }
+
+                } else if (strcmp(dbuf,"4")==0) {
+                    req[0]=0x19; req[1]=0x01; req[2]=0x0F;
+                    { uint16_t rlen = dsd.dispatch(req,3,resp,64); decodeResponse(resp, rlen); }
+                    req[0]=0x19; req[1]=0x02; req[2]=0x0F;
+                    { uint16_t rlen = dsd.dispatch(req,3,resp,64); decodeResponse(resp, rlen); }
+
+                } else if (strcmp(dbuf,"5")==0) {
+                    req[0]=0x14; req[1]=0xFF; req[2]=0xFF; req[3]=0xFF;
+                    { uint16_t rlen = dsd.dispatch(req,4,resp,64); decodeResponse(resp, rlen); }
+                    printf("  >> DTCs cleared\n");
+
+                } else if (strcmp(dbuf,"6")==0) {
+                    req[0]=0x31; req[1]=0x01; req[2]=0x02; req[3]=0x02;
+                    { uint16_t rlen = dsd.dispatch(req,4,resp,64); decodeResponse(resp, rlen); }
+
+                } else if (strcmp(dbuf,"7")==0) {
+                    printf("  1=Enable  2=Disable: ");
+                    fflush(stdout);
+                    char xbuf[8]{};
+                    if(fgets(xbuf,8,stdin)){
+                        req[0]=0x85;
+                        req[1]=(xbuf[0]=='2') ? 0x02 : 0x01;
+                        { uint16_t rlen = dsd.dispatch(req,2,resp,64); decodeResponse(resp, rlen); }
+                    }
+
+                } else if (strcmp(dbuf,"8")==0) {
+                    req[0]=0x2E; req[1]=0xF1; req[2]=0x90;
+                    memcpy(&req[3],"KAVACH-NEW-VIN-01",17);
+                    { uint16_t rlen = dsd.dispatch(req,20,resp,64); decodeResponse(resp, rlen); }
+
+                } else if (strcmp(dbuf,"9")==0) {
+                    printf("  1=Hard  2=KeyOffOn  3=Soft: ");
+                    fflush(stdout);
+                    char xbuf[8]{};
+                    if(fgets(xbuf,8,stdin)){
+                        req[0]=0x11;
+                        req[1]=(xbuf[0]=='1')?0x01:(xbuf[0]=='2')?0x02:0x03;
+                        { uint16_t rlen = dsd.dispatch(req,2,resp,64); decodeResponse(resp, rlen); }
+                    }
+                } else {
+                    printf("  Unknown service.\n");
+                }
+            }
+
+            // Switch to extended session
+            req[0]=0x10; req[1]=0x03;
+
         } else if (strcmp(buf,"q")==0 || strcmp(buf,"Q")==0) {
             printf("Exiting.\n");
             break;
@@ -121,8 +398,8 @@ int main() {
     NvmStorage       nvm{"dem_nvram.bin"};
     EvtLogger        logger{"logs"};
     KavachEth        eth{"192.168.0.110", 1502, 5601};
-    ModbusTcp        modbus{"192.168.0.110", 1502};
-    KavachUdp        udp{"192.168.0.110", KAVACH_UDP_PORT};
+    ModbusTcp        modbus{"192.168.0.110", 1502, &dem};
+    KavachUdp        udp{"192.168.0.110", KAVACH_UDP_PORT, &dem};
     KavachConditions cond{dem, logger, eth, modbus};
     KavachSensor     sensor{"192.168.0.110", 1502};
 
@@ -310,7 +587,7 @@ int main() {
     nvm.store(dem);
 
     // Interactive menu
-    runMenu(logger, dem);
+    runMenu(logger, dem, dsd);
 
     printf("\n[MAIN] Done.\n");
     printf("  events_failed.csv -> current run\n");
