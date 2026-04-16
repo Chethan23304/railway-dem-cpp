@@ -8,6 +8,7 @@ class DemCore {
 public:
     static constexpr uint8_t MAX_EVENT_MEMORY    = 8U;
     static constexpr uint8_t DEBOUNCE_THRESHOLD  = 3U;
+    static constexpr uint8_t AGING_THRESHOLD     = 40U;
 
     struct EventMemoryEntry {
         Dem_EventIdType eventId        = 0;
