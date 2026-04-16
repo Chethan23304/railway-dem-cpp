@@ -101,15 +101,11 @@ Std_ReturnType DemCore::setEventStatus(Dem_EventIdType id,
                 printf("[DemCore] DTC 0x%06X aged out after %d cycles\n",
                        e->dtc, e->agingCounter);
                 // Remove entry from memory by shifting remaining entries
-                for (uint8_t i = 0; i < m_memCount; i++) {
-                    if (m_memory[i].eventId == id) {
-                        for (uint8_t j = i; j < m_memCount - 1U; j++)
-                            m_memory[j] = m_memory[j + 1U];
-                        m_memCount--;
-                        m_udsStatus[id] = 0;  // Clear UDS status
-                        break;
-                    }
-                }
+                uint8_t idx = static_cast<uint8_t>(e - m_memory.data());
+                for (uint8_t j = idx; j < m_memCount - 1U; j++)
+                    m_memory[j] = m_memory[j + 1U];
+                m_memCount--;
+                m_udsStatus[id] = 0;  // Clear UDS status
             }
         }
     }
