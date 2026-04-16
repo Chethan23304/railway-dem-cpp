@@ -52,10 +52,10 @@ public:
 
 private:
     // UDS status table indexed by event index (0-based)
-    std::array<uint8_t,          0x00C0> m_udsStatus    {};
-    std::array<uint8_t,          0x00C0> m_debounce     {};
-    std::array<uint8_t,          0x00C0> m_timeDebounce {};
-    std::array<Dem_EventStatus,  0x00C0> m_currentStatus{};
+    std::array<uint8_t,          0x00C2> m_udsStatus    {};
+    std::array<uint8_t,          0x00C2> m_debounce     {};
+    std::array<uint8_t,          0x00C2> m_timeDebounce {};
+    std::array<Dem_EventStatus,  0x00C2> m_currentStatus{};
 
     std::array<EventMemoryEntry, MAX_EVENT_MEMORY> m_memory{};
     uint8_t m_memCount = 0;

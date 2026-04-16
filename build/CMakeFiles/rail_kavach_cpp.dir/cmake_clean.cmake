@@ -1,4 +1,5 @@
 file(REMOVE_RECURSE
+  "CMakeFiles/rail_kavach_cpp.dir/link.d"
   "CMakeFiles/rail_kavach_cpp.dir/app/main.cpp.o"
   "CMakeFiles/rail_kavach_cpp.dir/app/main.cpp.o.d"
   "CMakeFiles/rail_kavach_cpp.dir/bsw/dcm/src/DCM_DSD.cpp.o"

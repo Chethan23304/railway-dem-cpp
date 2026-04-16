@@ -121,8 +121,8 @@ int main() {
     NvmStorage       nvm{"dem_nvram.bin"};
     EvtLogger        logger{"logs"};
     KavachEth        eth{"192.168.0.110", 1502, 5601};
-    ModbusTcp        modbus{"192.168.0.110", 1502};
-    KavachUdp        udp{"192.168.0.110", KAVACH_UDP_PORT};
+    ModbusTcp        modbus{"192.168.0.110", 1502, &dem};
+    KavachUdp        udp{"192.168.0.110", KAVACH_UDP_PORT, &dem};
     KavachConditions cond{dem, logger, eth, modbus};
     KavachSensor     sensor{"192.168.0.110", 1502};
 
