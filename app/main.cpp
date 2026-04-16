@@ -419,7 +419,11 @@ int main() {
     DCM_DSP  dsp{dem, logger, dsl};
     DCM_DSD  dsd{dsl, dsp};
 
-    nvm.restore(dem);
+    // DO NOT restore from NVM - start fresh each run
+    // nvm.restore(dem);
+    
+    printf("[MAIN] Starting fresh - no NVM restore\n");
+    
     modbus.connect();
 
     if (!sensor.connect())
@@ -595,7 +599,7 @@ int main() {
 
     printDtcReport(dem);
 
-    // Save NvM
+    // Save to NVM for next run
     nvm.store(dem);
 
     // Interactive menu
