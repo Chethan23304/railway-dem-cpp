@@ -95,6 +95,16 @@ Std_ReturnType DemCore::setEventStatus(Dem_EventIdType id,
             e->udsStatusByte = m_udsStatus[id];
             e->currentStatus = status;
             e->agingCounter++;
+            if (e->agingCounter >= AGING_THRESHOLD) {
+                printf("[DemCore] DTC 0x%06X aged out after %d cycles\n",
+                       e->dtc, e->agingCounter);
+                uint8_t j = static_cast<uint8_t>(e - m_memory.data());
+                for (uint8_t k = j; k < m_memCount - 1U; k++) {
+                    m_memory[k] = m_memory[k + 1U];
+                }
+                m_memory[m_memCount - 1U] = EventMemoryEntry{};
+                m_memCount--;
+            }
         }
     }
     return E_OK;
@@ -108,6 +118,10 @@ Std_ReturnType DemCore::getEventStatus(Dem_EventIdType id,
 }
 
 Std_ReturnType DemCore::clearDTC(Dem_DTCType dtc) {
+    // DTCs can be cleared via:
+    // - Explicit 0x14 ClearDiagnosticInformation UDS request (handled here)
+    // - Auto-aging after AGING_THRESHOLD consecutive passed test cycles
+    // - Group clear (DEM_DTC_GROUP_ALL)
     if (dtc == DEM_DTC_GROUP_ALL) {
         m_udsStatus.fill(0);
         m_debounce.fill(0);
