@@ -37,11 +37,12 @@ KavachSensorData KavachSensor::readAll() {
     KavachSensorData d{};
     if (!m_connected && !connect()) return d;
     auto readReg = [this](uint16_t addr) { uint16_t v=0; modbus_read_registers(m_ctx, addr, 1, &v); return v; };
-    d.speedActual = readReg(273);
-    d.speedPermitted = readReg(266);
-    d.speedWarning = readReg(275);
+    auto readSpeedReg = [&](uint16_t addr) { return (readReg(addr) * 18) / 100; };
+    d.speedActual = readSpeedReg(273);
+    d.speedPermitted = readSpeedReg(266);
+    d.speedWarning = readSpeedReg(275);
     d.rfSignalBars = readReg(294);
-    d.sectionSpeed = readReg(365);
+    d.sectionSpeed = readSpeedReg(365);
     d.brakePipe = readReg(280);
     d.signalAspect = static_cast<uint8_t>(readReg(50));
     d.tagId = readReg(100);
