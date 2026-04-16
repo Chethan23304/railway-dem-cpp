@@ -30,9 +30,13 @@ constexpr Dem_EventIdType KAVACH_EVT_RFID = 0x00B1U;  // RFID Tag Read
 constexpr Dem_EventIdType KAVACH_EVT_SIG  = 0x00B2U;  // Aspect Change
 constexpr Dem_EventIdType KAVACH_EVT_MA   = 0x00B3U;  // MA Update
 
-constexpr uint16_t DEM_NUM_EVENTS    = 19U;
+// Communication Fault Events
+constexpr Dem_EventIdType KAVACH_EVT_MODBUS_FAULT = 0x00C0U;  // Modbus TCP failure
+constexpr Dem_EventIdType KAVACH_EVT_UDP_FAULT    = 0x00C1U;  // UDP send failure
+
+constexpr uint16_t DEM_NUM_EVENTS    = 21U;
 constexpr Dem_EventIdType DEM_FIRST_EVENT_ID = 0x0001U;
-constexpr Dem_EventIdType DEM_LAST_EVENT_ID  = 0x00B3U;
+constexpr Dem_EventIdType DEM_LAST_EVENT_ID  = 0x00C1U;
 
 // DTC code for each event
 constexpr Dem_DTCType getDTC(Dem_EventIdType id) {
@@ -53,10 +57,12 @@ constexpr Dem_DTCType getDTC(Dem_EventIdType id) {
         case KAVACH_EVT_ROLLBACK:  return 0x00A401U;
         case KAVACH_EVT_RADIO_LOSS:return 0x00A501U;
         case KAVACH_EVT_BRAKE_CMD: return 0x00A601U;
-        case KAVACH_EVT_RFID:      return 0x00B101U;
-        case KAVACH_EVT_SIG:       return 0x00B201U;
-        case KAVACH_EVT_MA:        return 0x00B301U;
-        default:                   return 0x000000U;
+        case KAVACH_EVT_RFID:         return 0x00B101U;
+        case KAVACH_EVT_SIG:          return 0x00B201U;
+        case KAVACH_EVT_MA:           return 0x00B301U;
+        case KAVACH_EVT_MODBUS_FAULT: return 0x00C001U;
+        case KAVACH_EVT_UDP_FAULT:    return 0x00C101U;
+        default:                      return 0x000000U;
     }
 }
 
@@ -78,9 +84,11 @@ constexpr const char* getEventName(Dem_EventIdType id) {
         case KAVACH_EVT_ROLLBACK:  return "Roll_Back";
         case KAVACH_EVT_RADIO_LOSS:return "Radio_Loss";
         case KAVACH_EVT_BRAKE_CMD: return "Brake_Command";
-        case KAVACH_EVT_RFID:      return "RFID_Tag_Read";
-        case KAVACH_EVT_SIG:       return "Aspect_Change";
-        case KAVACH_EVT_MA:        return "MA_Update";
-        default:                   return "UNKNOWN";
+        case KAVACH_EVT_RFID:         return "RFID_Tag_Read";
+        case KAVACH_EVT_SIG:          return "Aspect_Change";
+        case KAVACH_EVT_MA:           return "MA_Update";
+        case KAVACH_EVT_MODBUS_FAULT: return "Modbus_Fault";
+        case KAVACH_EVT_UDP_FAULT:    return "UDP_Fault";
+        default:                      return "UNKNOWN";
     }
 }

@@ -1,3 +1,0 @@
-/home/chethan/railway-dem-cpp/build/CMakeFiles/rail_kavach_cpp.dir
-/home/chethan/railway-dem-cpp/build/CMakeFiles/edit_cache.dir
-/home/chethan/railway-dem-cpp/build/CMakeFiles/rebuild_cache.dir

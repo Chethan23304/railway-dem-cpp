@@ -13,7 +13,8 @@
 class KavachUdp {
 public:
     KavachUdp(const std::string& dmiIp  = "192.168.0.110",
-              uint16_t           port   = KAVACH_UDP_PORT);
+              uint16_t           port   = KAVACH_UDP_PORT,
+              DemCore*           dem    = nullptr);
     ~KavachUdp();
 
     // Send one event frame - call this when any event FAILS
@@ -44,6 +45,7 @@ private:
     int                m_sock = -1;
     struct sockaddr_in m_dmiAddr{};
     uint32_t           m_hbCount = 0;
+    DemCore*           m_dem     = nullptr;
 
     void sendFrame(const KavachUdpFrame& frame);
 };
