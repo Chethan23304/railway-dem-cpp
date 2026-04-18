@@ -12,6 +12,11 @@ struct KavachSensorData {
     uint16_t brakePipe{0};
     uint8_t  signalAspect{0};
     uint16_t tagId{0};
+    uint16_t tagStatus{0};
+    uint16_t rfid1Status{0};
+    uint16_t rfid2Status{0};
+    uint16_t rfid1LastTag{0};
+    uint16_t rfid2LastTag{0};
     bool overspeed{false};
     bool radioLost{false};
     uint16_t emergencyBrake{0};

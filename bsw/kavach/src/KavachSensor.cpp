@@ -1,4 +1,5 @@
 #include "KavachSensor.hpp"
+#include "register_map.h"
 #include <cstdio>
 #include <cstring>
 
@@ -37,17 +38,25 @@ KavachSensorData KavachSensor::readAll() {
     KavachSensorData d{};
     if (!m_connected && !connect()) return d;
     auto readReg = [this](uint16_t addr) { uint16_t v=0; modbus_read_registers(m_ctx, addr, 1, &v); return v; };
-    d.speedActual = readReg(273);
-    d.speedPermitted = readReg(266);
-    d.speedWarning = readReg(275);
-    d.rfSignalBars = readReg(294);
-    d.sectionSpeed = readReg(365);
-    d.brakePipe = readReg(280);
-    d.signalAspect = static_cast<uint8_t>(readReg(50));
-    d.tagId = readReg(100);
-    d.overspeed = (d.speedActual > d.speedPermitted && d.speedPermitted > 0);
-    d.radioLost = (d.rfSignalBars == 0);
-    d.valid = true;
-    printf("[KavachSensor] Speed=%d/%d Aspect=%d TagId=%d\n", d.speedActual, d.speedPermitted, d.signalAspect, d.tagId);
+    d.speedActual    = readReg(MMI_V_TRAIN);
+    d.speedPermitted = readReg(MMI_V_PERMITTED);
+    d.speedWarning   = readReg(MMI_V_WARNING);
+    d.rfSignalBars   = readReg(MMI_RF_SIGNAL_BAR_COUNT);
+    d.sectionSpeed   = readReg(MMI_SECTION_SPEED);
+    d.brakePipe      = readReg(V_MAXTRAIN);
+    d.signalAspect   = static_cast<uint8_t>(readReg(MMI_SIGNAL_ASPECT));
+    d.tagId          = readReg(MMI_TAG_ID);
+    d.tagStatus      = readReg(MMI_TAG_STATUS_BITS);
+    d.rfid1Status    = readReg(HD_RFID1_STATUS);
+    d.rfid2Status    = readReg(HD_RFID2_STATUS);
+    d.rfid1LastTag   = readReg(HD_RFID1_LTD);
+    d.rfid2LastTag   = readReg(HD_RFID2_LTD);
+    d.overspeed      = (d.speedActual > d.speedPermitted && d.speedPermitted > 0);
+    d.radioLost      = (d.rfSignalBars == 0);
+    d.valid          = true;
+    printf("[KavachSensor] Speed=%d/%d Aspect=%d TagId=%d TagStatus=0x%X\n",
+           d.speedActual, d.speedPermitted, d.signalAspect, d.tagId, d.tagStatus);
+    printf("[KavachSensor] RFID1: status=0x%X lastTag=%d  RFID2: status=0x%X lastTag=%d\n",
+           d.rfid1Status, d.rfid1LastTag, d.rfid2Status, d.rfid2LastTag);
     return d;
 }
