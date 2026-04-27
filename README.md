@@ -1,12 +1,13 @@
 # Railway DEM/DCM - Kavach DMI (C++)
 
-A complete Diagnostic Event Manager (DEM) and Diagnostic Communication Manager (DCM) implementation for the Indian Railways Kavach safety system, built in C++ with simplified OOP principles following AUTOSAR architecture.
+A complete Diagnostic Event Manager (DEM) and Diagnostic Communication Manager (DCM) implementation for the Indian Railways Kavach safety system, built in C++ with simplified OOP principles following AUTOSAR standards.
 
 ---
 
 ## Table of Contents
 
 - [Overview](#overview)
+- [Project Statistics](#project-statistics)
 - [Project Structure](#project-structure)
 - [Architecture](#architecture)
 - [Modules](#modules)
@@ -24,9 +25,10 @@ A complete Diagnostic Event Manager (DEM) and Diagnostic Communication Manager (
 
 ## Overview
 
-This project simulates the DEM/DCM layer of the Kavach Train Collision Avoidance System. It detects safety-critical events (overspeed, SPAD, SOS, radio loss, rollback, RFID errors, brake faults, trip mode), logs them to structured CSV files, exposes UDS diagnostic services, and transmits live data to the Kavach DMI simulator over **Modbus TCP** and **Ethernet UDP**.
+This project simulates the DEM/DCM layer of the Kavach Train Collision Avoidance System. It detects safety-critical events (overspeed, SPAD, SOS, radio loss, rollback, RFID errors, brake faults, trip mode) and manages diagnostic communication via UDS (Unified Diagnostic Services). Event memory persists across power cycles using NvM storage. Live DTC data is transmitted to the Kavach DMI via Modbus TCP.
 
 **Data Flow:**
+```
 Kavach Sensors
 |
 v
@@ -44,9 +46,26 @@ DemCore           ---- manages UDS status byte, event memory, debounce
 +---> ModbusTcp    ---- sends live DTC data to Kavach DMI (Qt)
 |
 +---> DCM (DSD/DSP/DSL)  ---- handles UDS requests
+```
+
+---
+
+## Project Statistics
+
+| Metric | Value |
+|---|---|
+| **Primary Language** | C++ (42%) |
+| **Build System** | Makefile (53.6%), CMake (4.4%) |
+| **Total Lines of Code** | ~2500+ |
+| **Modules** | 6 (DEM, DCM, NvM, Kavach Eth, Modbus TCP, Event Logger) |
+| **UDS Services Implemented** | 5 (0x10, 0x14, 0x19, 0x22, 0x27) |
+| **Safety Events Monitored** | 9 conditions |
+| **Event Memory Slots** | 8 slots with debounce |
+
 ---
 
 ## Project Structure
+```
 railway-dem-cpp/
 |
 +-- app/
@@ -105,13 +124,17 @@ railway-dem-cpp/
 |           +-- 0x0007_Trip.csv
 |
 +-- CMakeLists.txt
++-- Makefile
 +-- .gitignore
 +-- README.md
+```
+
 ---
 
 ## Architecture
 
 ### AUTOSAR-Inspired Layered Design
+```
 +-----------------------------------------------------+
 |                   Application Layer                 |
 |              app/diag_app/main.cpp                  |
@@ -129,11 +152,14 @@ railway-dem-cpp/
 |       |                                             |
 |  +----v-----+  +----------+  +------------------+  |
 |  |   NvM    |  |  Kavach  |  |   ModbusTcp      |  |
-|  | Storage  |  |   Eth    |  | 192.168.0.110:    |  |
+|  | Storage  |  |   Eth    |  | 192.168.0.110:   |  |
 |  +----------+  +----------+  |    1502           |  |
 |                               +------------------+  |
 +-----------------------------------------------------+
+```
+
 ### DCM Sub-Module Flow
+```
 Raw UDS bytes
 |
 v
@@ -147,6 +173,8 @@ DCM_DSP  ---> execute service, build response bytes
 |
 v
 Response bytes returned to caller
+```
+
 ---
 
 ## Modules
@@ -314,19 +342,22 @@ Add `QT += serialbus` to the `.pro` file and implement `QModbusTcpServer` listen
 ---
 
 ## Log Files
+```
 build/logs/
 +-- events_failed.csv        <- current run only (overwritten each run)
 +-- events_failed.txt        <- current run formatted
 +-- rbi_history.csv          <- all RBI queries across all runs
 +-- history/
-+-- 0x00A1_Over_Speeding.csv    <- only Over_Speeding queries
-+-- 0x00A2_SPAD.csv             <- only SPAD queries
-+-- 0x00A3_SOS_Received.csv
-+-- 0x00A4_Roll_Back.csv
-+-- 0x00A5_Radio_Loss.csv
-+-- 0x00A6_Brake_Command.csv
-+-- 0x00B1_RFID_Tag_Read.csv
-+-- 0x0007_Trip.csv
+    +-- 0x00A1_Over_Speeding.csv    <- only Over_Speeding queries
+    +-- 0x00A2_SPAD.csv             <- only SPAD queries
+    +-- 0x00A3_SOS_Received.csv
+    +-- 0x00A4_Roll_Back.csv
+    +-- 0x00A5_Radio_Loss.csv
+    +-- 0x00A6_Brake_Command.csv
+    +-- 0x00B1_RFID_Tag_Read.csv
+    +-- 0x0007_Trip.csv
+```
+
 **View logs in terminal:**
 ```bash
 column -t -s',' build/logs/events_failed.csv
@@ -354,7 +385,10 @@ make -j4
 ```
 
 Expected output:
+```
 [100%] Built target rail_kavach_cpp
+```
+
 ---
 
 ## Run Instructions
@@ -365,19 +399,26 @@ rm -f dem_nvram.bin logs/events_failed.*
 ```
 
 After the 9-step scenario completes, a menu appears:
+```
 ========================================
 What would you like to do?
 1  or  all  -> Show all failed events
 2  or  rbi  -> ReadByIdentifier query
 q           -> Quit
 Choice:
+```
+
 ---
 
 ## ReadByIdentifier Usage
 
 Select `2` or type `rbi` at the menu, then enter any Event ID:
+```
 Enter Event ID: A1
+```
+
 Output shows current run result plus full history across all previous runs:
+```
 +-----------------------------------------------------------------+
 |  ReadByIdentifier  EventId: 0x00A1  Over_Speeding              |
 +-----------------------------------------------------------------+
@@ -397,6 +438,8 @@ Run  Timestamp             EventName       DTC        UDS   Occ
 3    2026-04-04 09:45:12  Over_Speeding   0x00A101   0x2F   1
 Total records found: 3 (across all runs)
 +-----------------------------------------------------------------+
+```
+
 Enter `0000` to query all events at once. Enter `b` or `q` to return to menu.
 
 ---
@@ -448,4 +491,5 @@ Then in a second terminal run `./rail_kavach_cpp`.
 ## Author
 
 **Chethan** - Railway DEM/DCM implementation for Kavach DMI  
-GitHub: [Chethan23304](https://github.com/Chethan23304/railway-dem-cpp)
+GitHub: [Chethan23304](https://github.com/Chethan23304/railway-dem-cpp)  
+Last Updated: 2026-04-27
